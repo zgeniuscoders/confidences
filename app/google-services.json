@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "861998563879",
+    "project_id": "confidences-a1ccf",
+    "storage_bucket": "confidences-a1ccf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:861998563879:android:47aaa1eee0a73d6cffc402",
+        "android_client_info": {
+          "package_name": "cd.zgeniuscoders.confidences"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCSeK7H0-_d_BL_L3R46GmJyuI64yI5rsk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
