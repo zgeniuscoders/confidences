@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">Confidences</string>
+    <string name="phone_number_text">Merci de saisir votre numéro de téléphone. Cela nous permettra de vous envoyer des notifications et de vous offrir une expérience personnalisée.\nVotre numéro est strictement confidentiel et ne sera jamais partagé avec des tiers.</string>
+    <string name="confident_text">Ici, la confidentialité est notre priorité. Discutez librement et anonymement avec d’autres utilisateurs sur les sujets qui vous tiennent à cœur. Que vous souhaitiez partager vos pensées, poser des questions ou simplement discuter, vous êtes au bon endroit !</string>
+    <string name="mobile_number">Mobile Number</string>
 </resources>
