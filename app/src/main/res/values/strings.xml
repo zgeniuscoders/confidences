@@ -3,4 +3,6 @@
     <string name="phone_number_text">Merci de saisir votre numéro de téléphone. Cela nous permettra de vous envoyer des notifications et de vous offrir une expérience personnalisée.\nVotre numéro est strictement confidentiel et ne sera jamais partagé avec des tiers.</string>
     <string name="confident_text">Ici, la confidentialité est notre priorité. Discutez librement et anonymement avec d’autres utilisateurs sur les sujets qui vous tiennent à cœur. Que vous souhaitiez partager vos pensées, poser des questions ou simplement discuter, vous êtes au bon endroit !</string>
     <string name="mobile_number">Mobile Number</string>
+    <string name="usernameinfo">Pour des raisons de confidentialité, merci de choisir un nom d\'utilisateur qui ne révèle pas votre véritable identité. Évitez d\'utiliser votre vrai nom</string>
+    <string name="enter_username">Veuillez entrer un nom d\'utilisateur</string>
 </resources>

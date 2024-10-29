@@ -1,4 +1,4 @@
-package cd.zgeniuscoders.confidences.onboarding.presentation
+package cd.zgeniuscoders.confidences.authentication.presentation.phone_number
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -39,7 +39,8 @@ import network.chaintech.cmpcountrycodepicker.ui.CountryPickerBasicTextField
 fun PhoneNumberPage() {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
     ) {
 
         val selectedCountryState: MutableState<CountryDetails?> = remember {
@@ -49,7 +50,7 @@ fun PhoneNumberPage() {
             mutableStateOf("")
         }
 
-        Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.height(60.dp))
 
         Icon(
             Icons.Default.Phone, contentDescription = "phone number icon",
@@ -61,7 +62,6 @@ fun PhoneNumberPage() {
         Text(
             text = stringResource(R.string.phone_number_text),
             textAlign = TextAlign.Center,
-            fontSize = 14.sp,
         )
 
         Spacer(modifier = Modifier.height(20.dp))
