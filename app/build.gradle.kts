@@ -87,7 +87,7 @@ dependencies {
 
     implementation(libs.androidx.constraintlayout.compose)
 
-    implementation("network.chaintech:cmp-country-code-picker:1.0.1")
+    implementation(libs.cmp.country.code.picker)
 
 
 }
