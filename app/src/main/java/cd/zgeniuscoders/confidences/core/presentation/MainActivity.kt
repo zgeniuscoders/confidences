@@ -10,8 +10,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import cd.zgeniuscoders.confidences.authentication.presentation.phone_number.PhoneNumberPage
 import cd.zgeniuscoders.confidences.authentication.presentation.sign_google.SignGoogleScreen
-import cd.zgeniuscoders.confidences.onboarding.presentation.PhoneNumberPage
+import cd.zgeniuscoders.confidences.onboarding.presentation.components.Username
 import cd.zgeniuscoders.confidences.ui.theme.ConfidencesTheme
 
 class MainActivity : ComponentActivity() {
@@ -24,9 +25,9 @@ class MainActivity : ComponentActivity() {
                     Column(
                         modifier = Modifier
                             .padding(vertical = innerPadding.calculateTopPadding())
-                            .padding(horizontal = 10.dp)
+                            .padding(horizontal = 20.dp)
                     ) {
-                        PhoneNumberPage()
+                        Username()
                     }
                 }
             }
