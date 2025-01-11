@@ -1,5 +1,6 @@
 package cd.zgeniuscoders.confidences.authentication.presentation.sign_google
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -12,8 +13,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -21,34 +24,69 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewLightDark
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import cd.zgeniuscoders.confidences.R
+import cd.zgeniuscoders.confidences.core.domain.utils.Routes
+import cd.zgeniuscoders.confidences.ui.theme.ConfidencesTheme
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun SignGoogleScreen() {
+fun SignWithGooglePage(
+    navController: NavHostController,
+    snackbarHostState: SnackbarHostState
+) {
+
+    val vm = koinViewModel<SignWithGoogleViewModel>()
+    val state = vm.state
+    val onEvent = vm::onEventHandler
+
+    LaunchedEffect(state.message) {
+        if (state.message.isNotBlank()) {
+            snackbarHostState.showSnackbar(state.message)
+        }
+    }
+
+    LaunchedEffect(state.isLogged) {
+        if (state.isLogged) {
+            navController.navigate(Routes.MainNavGraph)
+        }
+    }
+
+    SignWithGoogleBody(
+        state,
+        onEvent
+    )
+
+}
+
+@Composable
+fun SignWithGoogleBody(state: SignWithGoogleState, onEvent: (event: SignWithGoogleEvent) -> Unit) {
+
     Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier = Modifier.fillMaxSize()
+            .padding(20.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
+        Spacer(modifier = Modifier.weight(1f))
         Text(
-            "Chats",
+            "Confidences",
             fontSize = 28.sp,
             fontWeight = FontWeight.Medium,
             modifier = Modifier.padding(top = 20.dp)
         )
-        Spacer(modifier = Modifier.weight(1f))
+
         Text(
             text = stringResource(R.string.confident_text),
             textAlign = TextAlign.Center,
-            fontSize = 14.sp,
         )
 
         Spacer(modifier = Modifier.height(20.dp))
 
         Button(
-            onClick = { /*TODO*/ },
+            onClick = { onEvent(SignWithGoogleEvent.OnGoogleButtonPressed) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 20.dp)
@@ -60,7 +98,7 @@ fun SignGoogleScreen() {
                     modifier = Modifier.size(20.dp)
                 )
                 Spacer(modifier = Modifier.width(20.dp))
-                Text("Google")
+                Text("Continuer avec google")
             }
         }
     }
@@ -69,13 +107,15 @@ fun SignGoogleScreen() {
 @Composable
 @PreviewLightDark
 fun SignGoogleScreenPreview(modifier: Modifier = Modifier) {
-    Scaffold { innerP ->
-        Column(
-            modifier
-                .padding(vertical = innerP.calculateTopPadding())
-                .padding(horizontal = 10.dp)
-        ) {
-            SignGoogleScreen()
+    ConfidencesTheme {
+        Scaffold { innerP ->
+            Column(
+                modifier
+                    .padding(vertical = innerP.calculateTopPadding())
+                    .padding(horizontal = 10.dp)
+            ) {
+                SignWithGoogleBody(SignWithGoogleState(), {})
+            }
         }
     }
 }

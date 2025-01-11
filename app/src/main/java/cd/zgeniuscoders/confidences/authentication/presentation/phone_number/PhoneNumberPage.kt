@@ -1,5 +1,6 @@
 package cd.zgeniuscoders.confidences.authentication.presentation.phone_number
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -8,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.Button
@@ -29,9 +29,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import cd.zgeniuscoders.confidences.R
-import cd.zgeniuscoders.confidences.authentication.presentation.sign_google.SignGoogleScreen
 import network.chaintech.cmpcountrycodepicker.model.CountryDetails
 import network.chaintech.cmpcountrycodepicker.ui.CountryPickerBasicTextField
 
@@ -39,6 +37,7 @@ import network.chaintech.cmpcountrycodepicker.ui.CountryPickerBasicTextField
 fun PhoneNumberPage() {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(10.dp),
         modifier = Modifier
             .fillMaxSize()
     ) {
@@ -57,14 +56,11 @@ fun PhoneNumberPage() {
             modifier = Modifier.size(100.dp)
         )
 
-        Spacer(modifier = Modifier.height(20.dp))
 
         Text(
             text = stringResource(R.string.phone_number_text),
             textAlign = TextAlign.Center,
         )
-
-        Spacer(modifier = Modifier.height(20.dp))
 
         CountryPickerBasicTextField(
             mobileNumber = mobileNumber,

@@ -1,14 +1,15 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.compose.compiler)
     id("kotlin-kapt")
-    id("com.google.dagger.hilt.android")
     alias(libs.plugins.google.gms.google.services)
+    kotlin("plugin.serialization") version "2.0.10"
 }
 
 android {
     namespace = "cd.zgeniuscoders.confidences"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "cd.zgeniuscoders.confidences"
@@ -74,22 +75,35 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    implementation(libs.hilt.android)
-    kapt(libs.hilt.android.compiler)
 
+//    compose
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation (libs.androidx.navigation.compose)
+    implementation(libs.androidx.constraintlayout.compose)
+    implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.coil.compose)
-    implementation(libs.coil.network.okhttp)
 
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.androidx.core.splashscreen)
 
-    implementation(libs.androidx.datastore.preferences)
+//    koin
+    implementation(libs.koin.core)
+    implementation(libs.koin.androidx.compose)
 
-    implementation(libs.androidx.constraintlayout.compose)
+//    coil for image
+    implementation(libs.coil.network.okhttp)
+
+    implementation(libs.androidx.datastore.preferences)
 
     implementation(libs.cmp.country.code.picker)
 
+    implementation(libs.play.services.auth)
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
+    implementation(libs.googleid)
 
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.kotlinx.coroutines.android)
 }
 
 kapt {
