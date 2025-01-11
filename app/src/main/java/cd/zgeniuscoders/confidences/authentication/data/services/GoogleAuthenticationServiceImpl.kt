@@ -7,7 +7,7 @@ import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
 import cd.zgeniuscoders.confidences.R
 import cd.zgeniuscoders.confidences.authentication.domain.models.AuthResponse
-import cd.zgeniuscoders.confidences.authentication.domain.models.User
+import cd.zgeniuscoders.confidences.user.domain.models.User
 import cd.zgeniuscoders.confidences.authentication.domain.services.GoogleAuthenticationService
 import cd.zgeniuscoders.confidences.core.domain.utils.Result
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption

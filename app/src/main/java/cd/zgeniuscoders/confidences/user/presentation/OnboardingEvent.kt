@@ -1,4 +1,4 @@
-package cd.zgeniuscoders.confidences.onboarding.presentation
+package cd.zgeniuscoders.confidences.user.presentation
 
 sealed interface OnboardingEvent {
 

@@ -8,4 +8,6 @@
     <string name="welcome_txt">L’application où vous pouvez échanger anonymement, seul l’initiateur du message connaît l’identité de son interlocuteur. Partagez vos pensées en toute liberté et confidentialité.</string>
     <string name="next">Suivant</string>
     <string name="web_client_id">861998563879-eogr9d27s2u4fh0739vcn93vrdi5t7sl.apps.googleusercontent.com</string>
+    <string name="finish">Terminer</string>
+    <string name="previous">Precedent</string>
 </resources>
