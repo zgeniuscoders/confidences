@@ -1,5 +1,6 @@
 package cd.zgeniuscoders.confidences.di
 
+import cd.zgeniuscoders.confidences.chat.presentation.chat_lists.ChatListViewModel
 import cd.zgeniuscoders.confidences.user.data.repository.FirebaseUserRepository
 import cd.zgeniuscoders.confidences.user.domain.repository.UserRepository
 import cd.zgeniuscoders.confidences.user.presentation.OnboardingViewModel
@@ -25,5 +26,6 @@ val appModule = module {
     }
 
     viewModelOf(::OnboardingViewModel)
+    viewModelOf(::ChatListViewModel)
 
 }

@@ -10,6 +10,7 @@ fun NavBackStackEntry?.fromRoute(): Routes {
                 Routes.ChatList::class.simpleName -> return Routes.ChatList
                 Routes.Chat::class.simpleName -> return Routes.Chat("")
                 Routes.Authentication::class.simpleName -> return Routes.Authentication
+                Routes.OnBoarding::class.simpleName -> return Routes.OnBoarding
                 Routes.UserProfile::class.simpleName -> return Routes.UserProfile("")
                 else -> return Routes.ChatList
             }
