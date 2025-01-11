@@ -1,4 +1,4 @@
-package cd.zgeniuscoders.confidences.authentication.domain.models
+package cd.zgeniuscoders.confidences.user.domain.models
 
 data class User(
     val userId: String,

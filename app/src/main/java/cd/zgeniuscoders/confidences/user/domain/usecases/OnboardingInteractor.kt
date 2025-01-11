@@ -1,6 +1,6 @@
-package cd.zgeniuscoders.confidences.onboarding.domain.usecases
+package cd.zgeniuscoders.confidences.user.domain.usecases
 
-import cd.zgeniuscoders.confidences.onboarding.domain.services.OnBoardingService
+import cd.zgeniuscoders.confidences.user.domain.services.OnBoardingService
 
 class OnboardingInteractor(
     val createUser: CreateUser

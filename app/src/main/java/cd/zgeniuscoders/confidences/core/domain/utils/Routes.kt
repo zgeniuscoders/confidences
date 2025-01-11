@@ -9,6 +9,9 @@ sealed interface Routes {
     data object Authentication : Routes
 
     @Serializable
+    data object AuthenticationNavGraph : Routes
+
+    @Serializable
     data object OnBoarding : Routes
 
     @Serializable

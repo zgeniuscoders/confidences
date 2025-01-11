@@ -50,7 +50,7 @@ fun SignWithGooglePage(
 
     LaunchedEffect(state.isLogged) {
         if (state.isLogged) {
-            navController.navigate(Routes.MainNavGraph)
+            navController.navigate(Routes.OnBoarding)
         }
     }
 
