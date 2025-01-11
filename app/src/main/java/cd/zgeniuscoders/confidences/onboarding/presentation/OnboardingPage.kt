@@ -12,10 +12,18 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import cd.zgeniuscoders.confidences.R
 import cd.zgeniuscoders.confidences.onboarding.presentation.components.Username
 import cd.zgeniuscoders.confidences.ui.theme.ConfidencesTheme
+
+@Composable
+fun OnBoardingBody() {
+    val vm = hiltViewModel<OnboardingViewModel>()
+}
 
 @Composable
 fun OnBoardingPage(
@@ -34,7 +42,7 @@ fun OnBoardingPage(
             Spacer(modifier = Modifier.weight(1f))
 
             Button(onClick = { onEvent(OnboardingEvent.OnNextButtonClicked) }) {
-                Text(text = "Suivant")
+                Text(text = stringResource(R.string.next))
             }
         }
 
@@ -44,7 +52,7 @@ fun OnBoardingPage(
 
 @PreviewLightDark
 @Composable
-fun preview(modifier: Modifier = Modifier) {
+fun OnBoardingPagePreview(modifier: Modifier = Modifier) {
     ConfidencesTheme {
         Scaffold { innerP ->
             Column(

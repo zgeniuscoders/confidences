@@ -2,7 +2,7 @@
   "project_info": {
     "project_number": "861998563879",
     "project_id": "confidences-a1ccf",
-    "storage_bucket": "confidences-a1ccf.appspot.com"
+    "storage_bucket": "confidences-a1ccf.firebasestorage.app"
   },
   "client": [
     {
@@ -12,7 +12,20 @@
           "package_name": "cd.zgeniuscoders.confidences"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "861998563879-aoi0m3ikjc9p88n5n0t8f79q240ik2bu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "cd.zgeniuscoders.confidences",
+            "certificate_hash": "9ea0e0b0e1d7c2adca569a38abaf8e9849d6b718"
+          }
+        },
+        {
+          "client_id": "861998563879-eogr9d27s2u4fh0739vcn93vrdi5t7sl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCSeK7H0-_d_BL_L3R46GmJyuI64yI5rsk"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "861998563879-eogr9d27s2u4fh0739vcn93vrdi5t7sl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

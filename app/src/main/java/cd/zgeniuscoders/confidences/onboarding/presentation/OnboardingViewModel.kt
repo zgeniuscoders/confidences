@@ -4,8 +4,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import cd.zgeniuscoders.confidences.onboarding.domain.usecases.OnboardingInteractor
 
-class OnboardingViewModel : ViewModel() {
+class OnboardingViewModel(
+    private val onBoarding: OnboardingInteractor
+) : ViewModel() {
 
     var state by mutableStateOf(OnboardingState())
         private set
