@@ -27,6 +27,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import cd.zgeniuscoders.confidences.authentication.presentation.sign_google.SignWithGooglePage
+import cd.zgeniuscoders.confidences.chat.presentation.chat.ChatPage
 import cd.zgeniuscoders.confidences.chat.presentation.chat_lists.ChatListPage
 import cd.zgeniuscoders.confidences.core.domain.extension.fromRoute
 import cd.zgeniuscoders.confidences.core.domain.utils.Routes
@@ -101,14 +102,14 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
 
-                            composable<Routes.Chat> {
-
-                            }
-
                             composable<Routes.UserProfile> {
 
                             }
 
+                        }
+
+                        composable<Routes.Chat> {
+                            ChatPage(navHostController = navController)
                         }
 
                         navigation<Routes.AuthenticationNavGraph>(startDestination = Routes.Authentication) {
@@ -128,7 +129,6 @@ class MainActivity : ComponentActivity() {
                             }
 
                         }
-
 
                     }
                 }

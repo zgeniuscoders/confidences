@@ -5,5 +5,5 @@ import cd.zgeniuscoders.confidences.core.domain.utils.Result
 import kotlinx.coroutines.flow.Flow
 
 interface GoogleAuthenticationService {
-    suspend fun signWithGoogle(): Flow<Result<AuthResponse>>
+    suspend fun signWithGoogle(): Flow<Result<Boolean>>
 }

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AddComment
 import androidx.compose.material.icons.rounded.Person
@@ -34,6 +35,7 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import cd.zgeniuscoders.confidences.core.domain.utils.Routes
 import cd.zgeniuscoders.confidences.ui.theme.ConfidencesTheme
 import org.koin.androidx.compose.koinViewModel
 
@@ -62,10 +64,13 @@ fun ChatListBody(state: ChatListState, onEvent: (event: ChatListEvent) -> Unit) 
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        items(12) {
+        items(state.messages) { message ->
             Column(
-                modifier = Modifier.fillMaxWidth()
-                    .clickable { }
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        Routes.Chat(message.receiverId)
+                    }
             ) {
                 Row(
                     modifier = Modifier
@@ -107,10 +112,12 @@ fun ChatListBody(state: ChatListState, onEvent: (event: ChatListEvent) -> Unit) 
                                 color = MaterialTheme.colorScheme.primary
                             )
                         }
+
                         Text(
-                            text = "Hello genius cva ?",
+                            text = "${message.message}",
                             color = MaterialTheme.colorScheme.secondary
                         )
+
                     }
                 }
             }

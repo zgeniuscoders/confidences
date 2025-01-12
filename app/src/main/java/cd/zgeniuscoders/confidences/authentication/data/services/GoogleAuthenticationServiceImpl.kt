@@ -6,8 +6,6 @@ import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
 import cd.zgeniuscoders.confidences.R
-import cd.zgeniuscoders.confidences.authentication.domain.models.AuthResponse
-import cd.zgeniuscoders.confidences.user.domain.models.User
 import cd.zgeniuscoders.confidences.authentication.domain.services.GoogleAuthenticationService
 import cd.zgeniuscoders.confidences.core.domain.utils.Result
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
@@ -53,7 +51,7 @@ class GoogleAuthenticationServiceImpl(
             .build()
     }
 
-    override suspend fun signWithGoogle(): Flow<Result<AuthResponse>> = callbackFlow {
+    override suspend fun signWithGoogle(): Flow<Result<Boolean>> = callbackFlow {
 
         val googleIdOptions = getGoogleIdOptions()
 
@@ -92,15 +90,7 @@ class GoogleAuthenticationServiceImpl(
                                     trySend(
 
                                         Result.Success(
-                                            data = auth.currentUser?.run {
-                                                User(
-                                                    userId = uid,
-                                                    username = displayName,
-                                                    email = email,
-                                                    phoneNumber = "",
-                                                    profilePictureUrl = photoUrl?.toString()
-                                                )
-                                            }?.let { it1 -> AuthResponse(data = it1) }
+                                            data = true
                                         )
                                     )
                                 } else {
