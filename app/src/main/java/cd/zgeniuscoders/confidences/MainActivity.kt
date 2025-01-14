@@ -1,9 +1,12 @@
 package cd.zgeniuscoders.confidences
 
+import android.Manifest
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -29,6 +32,7 @@ import androidx.navigation.compose.rememberNavController
 import cd.zgeniuscoders.confidences.authentication.presentation.sign_google.SignWithGooglePage
 import cd.zgeniuscoders.confidences.chat.presentation.chat.ChatPage
 import cd.zgeniuscoders.confidences.chat.presentation.chat_lists.ChatListPage
+import cd.zgeniuscoders.confidences.chat.presentation.contact_list.ContactListPage
 import cd.zgeniuscoders.confidences.core.domain.extension.fromRoute
 import cd.zgeniuscoders.confidences.core.domain.utils.Routes
 import cd.zgeniuscoders.confidences.ui.theme.ConfidencesTheme
@@ -48,10 +52,23 @@ class MainActivity : ComponentActivity() {
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                 val currentRoute = navBackStackEntry?.fromRoute()
 
+                val contactLauncher =
+                    rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission(),
+                        onResult = { isGranted ->
+                            if (isGranted) {
+                                navController.navigate(Routes.ContactList)
+                            }
+                        })
+
                 installSplashScreen()
 
                 Scaffold(
                     topBar = {
+                        if (currentRoute == Routes.ContactList) {
+                            TopAppBar(
+                                title = { Text(text = "Mes Contacts") },
+                            )
+                        }
                         if (currentRoute == Routes.ChatList) {
                             TopAppBar(
                                 title = { Text(text = "Confidences") },
@@ -74,7 +91,9 @@ class MainActivity : ComponentActivity() {
                     },
                     floatingActionButton = {
                         if (currentRoute == Routes.ChatList) {
-                            FloatingActionButton(onClick = { /*TODO*/ }) {
+                            FloatingActionButton(onClick = {
+                                contactLauncher.launch(Manifest.permission.READ_CONTACTS)
+                            }) {
                                 Icon(
                                     imageVector = Icons.Rounded.AddComment,
                                     contentDescription = "add_chat_icon"
@@ -88,7 +107,7 @@ class MainActivity : ComponentActivity() {
                     NavHost(
                         modifier = Modifier.padding(innerPadding),
                         navController = navController,
-                        startDestination = Routes.AuthenticationNavGraph
+                        startDestination = Routes.MainNavGraph
                     ) {
 
                         navigation<Routes.MainNavGraph>(
@@ -104,6 +123,13 @@ class MainActivity : ComponentActivity() {
 
                             composable<Routes.UserProfile> {
 
+                            }
+
+                            composable<Routes.ContactList> {
+                                ContactListPage(
+                                    navHostController = navController,
+                                    snackbarHostState = snackbarHostState
+                                )
                             }
 
                         }

@@ -28,6 +28,9 @@ class OnboardingViewModel(
             is OnboardingEvent.OnUsernameChanged -> state = state.copy(username = event.value)
             is OnboardingEvent.OnPhoneNumberChanged -> state = state.copy(phoneNumber = event.value)
             OnboardingEvent.OnPreviousButtonClicked -> onPreviousButton()
+            is OnboardingEvent.OnCountryCodeChanged -> state = state.copy(
+                selectedCountryState = event.value
+            )
         }
     }
 
@@ -42,11 +45,13 @@ class OnboardingViewModel(
             val isValidated = validated()
             if (isValidated) {
                 val user = currentUser.currentUser
+                val phoneNumber =
+                    "${state.selectedCountryState?.countryPhoneNumberCode}${state.phoneNumber}"
 
                 userRepository
                     .addUser(
                         UserRequest(
-                            state.phoneNumber,
+                            phoneNumber,
                             user!!.uid,
                             state.username,
                             user.email!!

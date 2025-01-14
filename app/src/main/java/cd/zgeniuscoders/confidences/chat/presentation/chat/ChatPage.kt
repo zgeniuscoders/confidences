@@ -2,9 +2,7 @@ package cd.zgeniuscoders.confidences.chat.presentation.chat
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -21,7 +19,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -35,6 +32,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import cd.zgeniuscoders.confidences.chat.domain.models.Message
+import cd.zgeniuscoders.confidences.chat.presentation.chat.components.ChatItem
 import cd.zgeniuscoders.confidences.ui.theme.ConfidencesTheme
 import org.koin.androidx.compose.koinViewModel
 
@@ -68,38 +66,7 @@ fun ChatBody(state: ChatState, onEvent: (event: ChatEvent) -> Unit) {
                 }
         ) {
             items(state.messages) { message ->
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(10.dp),
-                    horizontalAlignment = if (message.senderId == state.currentUserId) Alignment.End else Alignment.Start
-                ) {
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth(0.8f),
-                        colors = CardDefaults.cardColors(
-                            containerColor = if (message.senderId == state.currentUserId)
-                                MaterialTheme.colorScheme.primary
-                            else
-                                MaterialTheme.colorScheme.surfaceContainerHigh
-                        )
-                    ) {
-                        Column(
-                            modifier = Modifier.padding(10.dp),
-                        ) {
-                            Text(
-                                message.message,
-                            )
-                            Row {
-                                Spacer(modifier = Modifier.weight(1f))
-                                Text(
-                                    "${message.timestamp}",
-                                    style = MaterialTheme.typography.labelLarge
-                                )
-                            }
-                        }
-                    }
-                }
+                ChatItem(message = message, currentUserId = state.currentUserId)
             }
         }
 
@@ -125,19 +92,23 @@ fun ChatBody(state: ChatState, onEvent: (event: ChatEvent) -> Unit) {
                     }
                 },
                 value = state.message,
-                onValueChange = {},
+                onValueChange = {
+                    onEvent(ChatEvent.OnMessageFieldChange(it))
+                },
                 maxLines = 3,
                 modifier = Modifier
                     .weight(0.8f)
                     .height(55.dp),
                 colors = TextFieldDefaults.colors(
-                    focusedContainerColor = Color.Transparent,
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent
                 )
             )
             Card(
-                modifier = Modifier.size(55.dp)
+                modifier = Modifier.size(55.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.primary
+                )
             ) {
                 Box(
                     modifier = Modifier.fillMaxSize(),

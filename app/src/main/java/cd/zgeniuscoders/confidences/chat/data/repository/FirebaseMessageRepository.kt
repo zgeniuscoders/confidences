@@ -27,7 +27,7 @@ class FirebaseMessageRepository(
     override suspend fun getMessages(room: String): Flow<Result<MessagesDto>> = callbackFlow {
         try {
 
-            getRoom(room).orderBy("timestamp", Query.Direction.DESCENDING)
+            getRoom(room).orderBy("sendAt", Query.Direction.DESCENDING)
                 .addSnapshotListener { value, error ->
 
                     if (error != null) {
@@ -38,9 +38,11 @@ class FirebaseMessageRepository(
 
                     if (value != null) {
                         val messages = value.toObjects(MessageDtoData::class.java)
-                        Result.Success(
-                            data = MessagesDto(
-                                data = messages
+                        trySend(
+                            Result.Success(
+                                data = MessagesDto(
+                                    data = messages
+                                )
                             )
                         )
                     }

@@ -58,7 +58,7 @@ fun PhoneNumber(state: OnboardingState, onEvent: (event: OnboardingEvent) -> Uni
                 onEvent(OnboardingEvent.OnPhoneNumberChanged(it))
             },
             onCountrySelected = {
-                selectedCountryState.value = it
+                onEvent(OnboardingEvent.OnCountryCodeChanged(it))
             },
             modifier = Modifier.fillMaxWidth(),
             defaultPaddingValues = PaddingValues(6.dp),

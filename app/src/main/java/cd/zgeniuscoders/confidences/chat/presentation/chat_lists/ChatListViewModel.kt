@@ -1,5 +1,6 @@
 package cd.zgeniuscoders.confidences.chat.presentation.chat_lists
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cd.zgeniuscoders.confidences.chat.data.mappers.toLatsMessageList
@@ -25,7 +26,6 @@ class ChatListViewModel(
     private var _state = MutableStateFlow(ChatListState())
     val state = _state
         .onStart {
-            getMessages()
         }
         .stateIn(
             viewModelScope,
@@ -33,11 +33,16 @@ class ChatListViewModel(
             _state.value
         )
 
+    init {
+        getMessages()
+    }
+
     fun onTriggerEvent(event: ChatListEvent){
 
     }
 
     private fun getMessages(){
+        Log.i("MESSAGE", "before getting message")
         viewModelScope.launch {
             latestMessageRepository
                 .getLatestMessage(user!!.uid)
@@ -45,18 +50,25 @@ class ChatListViewModel(
 
                     when (res) {
                         is Result.Error -> {
+                            Log.i("MESSAGE", "error")
+
                             _state.update {
                                 it.copy(isLoading = false, message = res.message.toString())
                             }
                         }
 
                         is Result.Success -> {
+                            Log.i("MESSAGE", "getting message")
+
                             _state.update {
                                 it.copy(
                                     isLoading = false,
                                     messages = res.data!!.toLatsMessageList()
                                 )
                             }
+
+                            Log.i("MESSAGE", res.data!!.toLatsMessageList().toString())
+
                         }
                     }
 

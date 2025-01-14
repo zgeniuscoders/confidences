@@ -7,6 +7,10 @@ data class UserDto(
     val data: UserDtoData
 )
 
+data class UsersDto(
+    val data: List<UserDtoData>
+)
+
 
 @Serializable
 data class UserDtoData(

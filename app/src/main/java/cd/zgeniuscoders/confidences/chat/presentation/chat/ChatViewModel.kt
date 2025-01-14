@@ -1,5 +1,6 @@
 package cd.zgeniuscoders.confidences.chat.presentation.chat
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -44,13 +45,16 @@ class ChatViewModel(
         .onStart {
             getCurrentUserId()
             getUser()
-            getMessage()
         }
         .stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000L),
             _state.value
         )
+
+    init {
+        getMessage()
+    }
 
     fun onTriggerEvent(event: ChatEvent) {
         when (event) {
@@ -68,7 +72,13 @@ class ChatViewModel(
     }
 
     private fun getMessage() {
+
         viewModelScope.launch(Dispatchers.IO) {
+
+            _state.update {
+                it.copy(isLoading = true)
+            }
+
             messageRepository
                 .getMessages(senderRoom)
                 .onEach { res ->
@@ -76,13 +86,13 @@ class ChatViewModel(
                     when (res) {
                         is Result.Error -> {
                             _state.update {
-                                it.copy(isLoading = false)
+                                it.copy(isLoading = false, error = res.message.toString())
                             }
                         }
 
                         is Result.Success -> {
                             _state.update {
-                                it.copy(messages = res.data!!.toMessageList())
+                                it.copy(messages = res.data!!.toMessageList(), isLoading = false)
                             }
                         }
                     }
@@ -153,6 +163,10 @@ class ChatViewModel(
                 .sendMessage(receiverRoom, message)
 
             saveLatestMessage()
+
+            _state.update {
+                it.copy(message = "")
+            }
         }
     }
 

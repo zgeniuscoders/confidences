@@ -8,5 +8,6 @@ data class ChatState(
     val user: User? = null,
     val isLoading: Boolean = false,
     val message: String = "",
-    val currentUserId: String = ""
+    val currentUserId: String = "",
+    val error: String = ""
 )

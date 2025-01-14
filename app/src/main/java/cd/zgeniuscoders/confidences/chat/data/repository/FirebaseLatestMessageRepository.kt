@@ -25,7 +25,7 @@ class FirebaseLatestMessageRepository(
                 collection
                     .document(userId)
                     .collection("latestMessage")
-                    .orderBy("timestamp", Query.Direction.DESCENDING)
+                    .orderBy("sendAt", Query.Direction.DESCENDING)
                     .addSnapshotListener { value, error ->
 
                         if (error != null) {
@@ -36,9 +36,11 @@ class FirebaseLatestMessageRepository(
 
                         if (value != null) {
                             val messages = value.toObjects(LatestMessageDtoData::class.java)
-                            Result.Success(
-                                data = LatestMessageDto(
-                                    data = messages
+                            trySend(
+                                Result.Success(
+                                    data = LatestMessageDto(
+                                        data = messages
+                                    )
                                 )
                             )
                         }

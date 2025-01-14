@@ -1,21 +1,16 @@
 package cd.zgeniuscoders.confidences.chat.presentation.chat_lists
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AddComment
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.Search
-import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -28,14 +23,16 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import cd.zgeniuscoders.confidences.core.domain.utils.Routes
+import androidx.navigation.compose.rememberNavController
+import cd.zgeniuscoders.confidences.chat.domain.models.LatestMessage
+import cd.zgeniuscoders.confidences.chat.presentation.components.AvatarCard
+import cd.zgeniuscoders.confidences.chat.presentation.components.UserItemCard
 import cd.zgeniuscoders.confidences.ui.theme.ConfidencesTheme
 import org.koin.androidx.compose.koinViewModel
 
@@ -55,72 +52,51 @@ fun ChatListPage(
         }
     }
 
-    ChatListBody(state, onEvent)
+    ChatListBody(navHostController, state, onEvent)
 
 }
 
 @Composable
-fun ChatListBody(state: ChatListState, onEvent: (event: ChatListEvent) -> Unit) {
+fun ChatListBody(
+    navHostController: NavHostController,
+    state: ChatListState, onEvent: (event: ChatListEvent) -> Unit
+) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         items(state.messages) { message ->
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable {
-                        Routes.Chat(message.receiverId)
-                    }
+            UserItemCard(
+                navHostController = navHostController,
+                hasAccount = true,
+                userId = message.receiverId
             ) {
-                Row(
-                    modifier = Modifier
-                        .padding(horizontal = 15.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(15.dp)
-                ) {
-                    Card(
-                        modifier = Modifier.size(60.dp)
-                    ) {
-                        Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                text = "A",
-                                style = MaterialTheme.typography.titleLarge,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-                    }
+                AvatarCard(initialLetter = 'A')
 
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(5.dp)
+                Column {
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier.fillMaxWidth()
                     ) {
-                        Row(
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Text(
-                                text = "Zgeniuscoders",
-                                style = MaterialTheme.typography.bodyLarge,
-                                fontWeight = FontWeight.Medium
-                            )
-                            Text(
-                                text = "20:00",
-                                style = MaterialTheme.typography.bodyMedium,
-                                fontWeight = FontWeight.Medium,
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                        }
-
                         Text(
-                            text = "${message.message}",
-                            color = MaterialTheme.colorScheme.secondary
+                            "zgeniuscoders", style = MaterialTheme.typography.titleMedium
                         )
-
+                        Text(
+                            text = "20:00",
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.Medium,
+                            color = MaterialTheme.colorScheme.primary
+                        )
                     }
+
+                    Text(
+                        message.message,
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.secondary
+                    )
                 }
+
             }
+
         }
     }
 }
@@ -162,10 +138,23 @@ fun ChatListPreview(modifier: Modifier = Modifier) {
             Column(
                 modifier = Modifier.padding(innerP)
             ) {
-                ChatListBody(state = ChatListState()) {
+                ChatListBody(
+                    rememberNavController(),
+                    state = ChatListState(
+                        messages = (1..10).map { lastMessage }
+                    )
+                ) {
 
                 }
             }
         }
     }
 }
+
+internal val lastMessage = LatestMessage(
+    "1",
+    message = "Petit nanga",
+    receiverId = "1",
+    image = null,
+    timestamp = 1003000
+)
