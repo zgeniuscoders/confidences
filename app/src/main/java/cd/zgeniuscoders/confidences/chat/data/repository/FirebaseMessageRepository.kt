@@ -27,7 +27,7 @@ class FirebaseMessageRepository(
     override suspend fun getMessages(room: String): Flow<Result<MessagesDto>> = callbackFlow {
         try {
 
-            getRoom(room).orderBy("sendAt", Query.Direction.DESCENDING)
+            getRoom(room).orderBy("sendAt", Query.Direction.ASCENDING)
                 .addSnapshotListener { value, error ->
 
                     if (error != null) {

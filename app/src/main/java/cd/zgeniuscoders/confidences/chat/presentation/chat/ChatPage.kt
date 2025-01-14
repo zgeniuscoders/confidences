@@ -31,8 +31,11 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import cd.zgeniuscoders.confidences.chat.domain.models.Message
 import cd.zgeniuscoders.confidences.chat.presentation.chat.components.ChatItem
+import cd.zgeniuscoders.confidences.chat.presentation.chat.components.ChatTopBar
+import cd.zgeniuscoders.confidences.chat.presentation.contact_list.user
 import cd.zgeniuscoders.confidences.ui.theme.ConfidencesTheme
 import org.koin.androidx.compose.koinViewModel
 
@@ -45,101 +48,114 @@ fun ChatPage(
 
     val onEvent = vm::onTriggerEvent
 
-    ChatBody(state, onEvent)
+    ChatBody(navHostController, state, onEvent)
 }
 
 @Composable
-fun ChatBody(state: ChatState, onEvent: (event: ChatEvent) -> Unit) {
-    ConstraintLayout(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        val (chatListsBox, bottomBox) = createRefs()
-
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .constrainAs(chatListsBox) {
-                    bottom.linkTo(bottomBox.top)
-                    top.linkTo(parent.top)
-                    end.linkTo(parent.end)
-                    start.linkTo(parent.start)
-                }
-        ) {
-            items(state.messages) { message ->
-                ChatItem(message = message, currentUserId = state.currentUserId)
-            }
+fun ChatBody(
+    navHostController: NavHostController,
+    state: ChatState,
+    onEvent: (event: ChatEvent) -> Unit
+) {
+    Scaffold(
+        topBar = {
+            ChatTopBar(navHostController = navHostController, state.user)
         }
-
-        Row(
+    ) { innerP ->
+        ConstraintLayout(
             modifier = Modifier
-                .fillMaxWidth()
-                .constrainAs(bottomBox) {
-                    bottom.linkTo(parent.bottom)
-                    end.linkTo(parent.end)
-                    start.linkTo(parent.start)
-                }
-                .padding(15.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(10.dp)
+                .padding(innerP)
+                .fillMaxSize()
         ) {
-            TextField(
-                leadingIcon = {
-                    IconButton(onClick = { /*TODO*/ }) {
-                        Icon(
-                            imageVector = Icons.Rounded.EmojiEmotions,
-                            contentDescription = "emoji_icon"
-                        )
-                    }
-                },
-                value = state.message,
-                onValueChange = {
-                    onEvent(ChatEvent.OnMessageFieldChange(it))
-                },
-                maxLines = 3,
+            val (chatListsBox, bottomBox) = createRefs()
+
+            LazyColumn(
                 modifier = Modifier
-                    .weight(0.8f)
-                    .height(55.dp),
-                colors = TextFieldDefaults.colors(
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent
-                )
-            )
-            Card(
-                modifier = Modifier.size(55.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.primary
-                )
+                    .constrainAs(chatListsBox) {
+                        top.linkTo(parent.top)
+                        bottom.linkTo(bottomBox.top)
+                    }
+                    .padding(vertical = 40.dp)
+                    .fillMaxSize()
             ) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
+                items(state.messages) { message ->
+                    ChatItem(message = message, currentUserId = state.currentUserId)
+                }
+            }
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .constrainAs(bottomBox) {
+                        bottom.linkTo(parent.bottom)
+                    }
+                    .padding(15.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                TextField(
+                    leadingIcon = {
+                        IconButton(onClick = { /*TODO*/ }) {
+                            Icon(
+                                imageVector = Icons.Rounded.EmojiEmotions,
+                                contentDescription = "emoji_icon"
+                            )
+                        }
+                    },
+                    value = state.message,
+                    onValueChange = {
+                        onEvent(ChatEvent.OnMessageFieldChange(it))
+                    },
+                    maxLines = 3,
+                    modifier = Modifier
+                        .weight(0.8f)
+                        .height(55.dp),
+                    colors = TextFieldDefaults.colors(
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent
+                    )
+                )
+                Card(
+                    modifier = Modifier.size(55.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.primary
+                    )
                 ) {
-                    IconButton(onClick = { onEvent(ChatEvent.OnSendMessageButtonClick) }) {
-                        Icon(
-                            imageVector = Icons.Rounded.Send,
-                            contentDescription = "emoji_icon"
-                        )
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        IconButton(onClick = { onEvent(ChatEvent.OnSendMessageButtonClick) }) {
+                            Icon(
+                                imageVector = Icons.Rounded.Send,
+                                contentDescription = "emoji_icon"
+                            )
+                        }
                     }
                 }
             }
         }
     }
+
 }
 
 @PreviewLightDark
 @Composable
 fun ChatPagePreview(modifier: Modifier = Modifier) {
     ConfidencesTheme {
-        Scaffold { innerP ->
-            ChatBody(state = ChatState(
+
+        ChatBody(
+            rememberNavController(),
+            state = ChatState(
                 currentUserId = "1",
-                messages = (1..50).map {
+                user = user,
+                messages = (1..5).map {
                     message.copy(senderId = (1..2).random().toString())
                 }
             )) {
 
             }
-        }
+
     }
 }
 

@@ -1,28 +1,11 @@
 package cd.zgeniuscoders.confidences
 
-import android.Manifest
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.AddComment
-import androidx.compose.material.icons.rounded.Person
-import androidx.compose.material.icons.rounded.Search
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -39,7 +22,7 @@ import cd.zgeniuscoders.confidences.ui.theme.ConfidencesTheme
 import cd.zgeniuscoders.confidences.user.presentation.OnBoardingPage
 
 class MainActivity : ComponentActivity() {
-    @OptIn(ExperimentalMaterial3Api::class)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -52,112 +35,61 @@ class MainActivity : ComponentActivity() {
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                 val currentRoute = navBackStackEntry?.fromRoute()
 
-                val contactLauncher =
-                    rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission(),
-                        onResult = { isGranted ->
-                            if (isGranted) {
-                                navController.navigate(Routes.ContactList)
-                            }
-                        })
-
                 installSplashScreen()
 
-                Scaffold(
-                    topBar = {
-                        if (currentRoute == Routes.ContactList) {
-                            TopAppBar(
-                                title = { Text(text = "Mes Contacts") },
-                            )
-                        }
-                        if (currentRoute == Routes.ChatList) {
-                            TopAppBar(
-                                title = { Text(text = "Confidences") },
-                                actions = {
-                                    IconButton(onClick = { /*TODO*/ }) {
-                                        Icon(
-                                            Icons.Rounded.Search,
-                                            contentDescription = "search_icon"
-                                        )
-                                    }
-                                    IconButton(onClick = { /*TODO*/ }) {
-                                        Icon(
-                                            Icons.Rounded.Person,
-                                            contentDescription = "search_icon"
-                                        )
-                                    }
-                                }
-                            )
-                        }
-                    },
-                    floatingActionButton = {
-                        if (currentRoute == Routes.ChatList) {
-                            FloatingActionButton(onClick = {
-                                contactLauncher.launch(Manifest.permission.READ_CONTACTS)
-                            }) {
-                                Icon(
-                                    imageVector = Icons.Rounded.AddComment,
-                                    contentDescription = "add_chat_icon"
-                                )
-                            }
-                        }
-                    },
-                    modifier = Modifier.fillMaxSize()
-                ) { innerPadding ->
+                NavHost(
+                    navController = navController,
+                    startDestination = Routes.MainNavGraph
+                ) {
 
-                    NavHost(
-                        modifier = Modifier.padding(innerPadding),
-                        navController = navController,
-                        startDestination = Routes.MainNavGraph
+                    navigation<Routes.MainNavGraph>(
+                        startDestination = Routes.ChatList,
                     ) {
 
-                        navigation<Routes.MainNavGraph>(
-                            startDestination = Routes.ChatList,
-                        ) {
+                        composable<Routes.ChatList> {
+                            ChatListPage(
+                                navHostController = navController,
+                                snackbarHostState = snackbarHostState
+                            )
+                        }
 
-                            composable<Routes.ChatList> {
-                                ChatListPage(
-                                    navHostController = navController,
-                                    snackbarHostState = snackbarHostState
-                                )
-                            }
-
-                            composable<Routes.UserProfile> {
-
-                            }
-
-                            composable<Routes.ContactList> {
-                                ContactListPage(
-                                    navHostController = navController,
-                                    snackbarHostState = snackbarHostState
-                                )
-                            }
+                        composable<Routes.UserProfile> {
 
                         }
 
-                        composable<Routes.Chat> {
-                            ChatPage(navHostController = navController)
-                        }
-
-                        navigation<Routes.AuthenticationNavGraph>(startDestination = Routes.Authentication) {
-
-                            composable<Routes.OnBoarding> {
-                                OnBoardingPage(
-                                    navController,
-                                    snackbarHostState
-                                )
-                            }
-
-                            composable<Routes.Authentication> {
-                                SignWithGooglePage(
-                                    navController,
-                                    snackbarHostState
-                                )
-                            }
-
+                        composable<Routes.ContactList> {
+                            ContactListPage(
+                                navHostController = navController,
+                                snackbarHostState = snackbarHostState
+                            )
                         }
 
                     }
+
+                    composable<Routes.Chat> {
+                        ChatPage(navHostController = navController)
+                    }
+
+                    navigation<Routes.AuthenticationNavGraph>(startDestination = Routes.Authentication) {
+
+                        composable<Routes.OnBoarding> {
+                            OnBoardingPage(
+                                navController,
+                                snackbarHostState
+                            )
+                        }
+
+                        composable<Routes.Authentication> {
+                            SignWithGooglePage(
+                                navController,
+                                snackbarHostState
+                            )
+                        }
+
+                    }
+
                 }
+
             }
         }
     }

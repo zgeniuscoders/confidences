@@ -1,8 +1,12 @@
 package cd.zgeniuscoders.confidences.chat.presentation.chat_lists
 
+import android.Manifest
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -33,6 +37,7 @@ import androidx.navigation.compose.rememberNavController
 import cd.zgeniuscoders.confidences.chat.domain.models.LatestMessage
 import cd.zgeniuscoders.confidences.chat.presentation.components.AvatarCard
 import cd.zgeniuscoders.confidences.chat.presentation.components.UserItemCard
+import cd.zgeniuscoders.confidences.core.domain.utils.Routes
 import cd.zgeniuscoders.confidences.ui.theme.ConfidencesTheme
 import org.koin.androidx.compose.koinViewModel
 
@@ -56,98 +61,113 @@ fun ChatListPage(
 
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChatListBody(
     navHostController: NavHostController,
     state: ChatListState, onEvent: (event: ChatListEvent) -> Unit
 ) {
-    LazyColumn(
-        verticalArrangement = Arrangement.spacedBy(10.dp)
-    ) {
-        items(state.messages) { message ->
-            UserItemCard(
-                navHostController = navHostController,
-                hasAccount = true,
-                userId = message.receiverId
-            ) {
-                AvatarCard(initialLetter = 'A')
+    val contactLauncher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission(),
+            onResult = { isGranted ->
+                if (isGranted) {
+                    navHostController.navigate(Routes.ContactList)
+                }
+            })
 
-                Column {
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(
-                            "zgeniuscoders", style = MaterialTheme.typography.titleMedium
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(text = "Confidences") },
+                actions = {
+                    IconButton(onClick = { /*TODO*/ }) {
+                        Icon(
+                            Icons.Rounded.Search,
+                            contentDescription = "search_icon"
                         )
+                    }
+                    IconButton(onClick = { /*TODO*/ }) {
+                        Icon(
+                            Icons.Rounded.Person,
+                            contentDescription = "search_icon"
+                        )
+                    }
+                }
+            )
+
+        },
+        floatingActionButton = {
+            FloatingActionButton(onClick = {
+                contactLauncher.launch(Manifest.permission.READ_CONTACTS)
+            }) {
+                Icon(
+                    imageVector = Icons.Rounded.AddComment,
+                    contentDescription = "add_chat_icon"
+                )
+
+            }
+        },
+        modifier = Modifier.fillMaxSize()
+    ) { innerPadding ->
+
+        LazyColumn(
+            modifier = Modifier.padding(innerPadding),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            items(state.messages) { message ->
+                UserItemCard(
+                    navHostController = navHostController,
+                    hasAccount = true,
+                    userId = message.receiverId
+                ) {
+                    AvatarCard(initialLetter = 'A')
+
+                    Column {
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(
+                                "zgeniuscoders", style = MaterialTheme.typography.titleMedium
+                            )
+                            Text(
+                                text = "20:00",
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = FontWeight.Medium,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
+
                         Text(
-                            text = "20:00",
-                            style = MaterialTheme.typography.bodyMedium,
-                            fontWeight = FontWeight.Medium,
-                            color = MaterialTheme.colorScheme.primary
+                            message.message,
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.secondary
                         )
                     }
 
-                    Text(
-                        message.message,
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.secondary
-                    )
                 }
 
             }
-
         }
+
     }
+
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @PreviewLightDark
 @Composable
 fun ChatListPreview(modifier: Modifier = Modifier) {
     ConfidencesTheme {
-        Scaffold(
-            topBar = {
-                TopAppBar(
-                    title = { Text(text = "Confidences") },
-                    actions = {
-                        IconButton(onClick = { /*TODO*/ }) {
-                            Icon(
-                                Icons.Rounded.Search,
-                                contentDescription = "search_icon"
-                            )
-                        }
-                        IconButton(onClick = { /*TODO*/ }) {
-                            Icon(
-                                Icons.Rounded.Person,
-                                contentDescription = "search_icon"
-                            )
-                        }
-                    }
-                )
-            },
-            floatingActionButton = {
-                FloatingActionButton(onClick = { /*TODO*/ }) {
-                    Icon(
-                        imageVector = Icons.Rounded.AddComment,
-                        contentDescription = "add_chat_icon"
-                    )
-                }
-            }
-        ) { innerP ->
-            Column(
-                modifier = Modifier.padding(innerP)
-            ) {
-                ChatListBody(
-                    rememberNavController(),
-                    state = ChatListState(
-                        messages = (1..10).map { lastMessage }
-                    )
-                ) {
 
-                }
-            }
+        ChatListBody(
+            rememberNavController(),
+            state = ChatListState(
+                messages = (1..10).map { lastMessage }
+            )
+        ) {
+
         }
+
     }
 }
 

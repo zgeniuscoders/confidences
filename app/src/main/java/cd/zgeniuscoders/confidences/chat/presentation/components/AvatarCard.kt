@@ -10,12 +10,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun AvatarCard(initialLetter: Char) {
+fun AvatarCard(
+    initialLetter: Char,
+    size: Dp = 60.dp
+) {
     Card(
-        modifier = Modifier.size(60.dp)
+        modifier = Modifier.size(size)
     ) {
         Box(
             modifier = Modifier.fillMaxSize(),
