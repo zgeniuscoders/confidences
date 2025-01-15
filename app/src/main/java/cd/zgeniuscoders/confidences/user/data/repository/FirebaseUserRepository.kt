@@ -16,10 +16,47 @@ import kotlinx.coroutines.tasks.await
 
 
 class FirebaseUserRepository(
-    private val db: FirebaseFirestore
+    db: FirebaseFirestore
 ) : UserRepository {
 
     private val collection = db.collection("users")
+    override suspend fun hasAccount(userId: String): Flow<Result<Boolean>> = callbackFlow {
+        try {
+
+            collection
+                .document(userId)
+                .addSnapshotListener { value, error ->
+
+                    if (error != null) {
+                        trySend(
+                            Result.Error(
+                                message = error.message.toString()
+                            )
+                        )
+                    }
+
+                    if (value != null) {
+                        trySend(
+                            Result.Success(
+                                data = value.exists()
+                            )
+                        )
+                    }
+
+                }
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+
+            trySend(
+                Result.Error(
+                    message = e.message.toString()
+                )
+            )
+        }
+
+        awaitClose()
+    }
 
     override suspend fun addUser(request: UserRequest): Flow<Result<Boolean>> = callbackFlow {
         try {

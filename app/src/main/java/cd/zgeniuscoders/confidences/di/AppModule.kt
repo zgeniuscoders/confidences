@@ -8,6 +8,9 @@ import cd.zgeniuscoders.confidences.chat.domain.repository.MessageRepository
 import cd.zgeniuscoders.confidences.chat.presentation.chat.ChatViewModel
 import cd.zgeniuscoders.confidences.chat.presentation.chat_lists.ChatListViewModel
 import cd.zgeniuscoders.confidences.chat.presentation.contact_list.ContactListViewModel
+import cd.zgeniuscoders.confidences.core.data.services.DatastoreSessionServiceImpl
+import cd.zgeniuscoders.confidences.core.domain.services.SessionService
+import cd.zgeniuscoders.confidences.core.presentation.AppViewModel
 import cd.zgeniuscoders.confidences.user.data.repository.FirebaseUserRepository
 import cd.zgeniuscoders.confidences.user.domain.repository.UserRepository
 import cd.zgeniuscoders.confidences.user.presentation.OnboardingViewModel
@@ -35,6 +38,10 @@ val appModule = module {
         ContactService(androidContext())
     }
 
+    single<SessionService> {
+        DatastoreSessionServiceImpl(androidContext())
+    }
+
     single<UserRepository> {
         FirebaseUserRepository(
             get()
@@ -49,6 +56,7 @@ val appModule = module {
         FirebaseLatestMessageRepository(get())
     }
 
+    viewModelOf(::AppViewModel)
     viewModelOf(::ChatViewModel)
     viewModelOf(::OnboardingViewModel)
     viewModelOf(::ChatListViewModel)

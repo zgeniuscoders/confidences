@@ -7,13 +7,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cd.zgeniuscoders.confidences.authentication.domain.services.GoogleAuthenticationService
 import cd.zgeniuscoders.confidences.core.domain.utils.Result
+import cd.zgeniuscoders.confidences.user.domain.repository.UserRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 class SignWithGoogleViewModel(
-    private val authenticationService: GoogleAuthenticationService
+    private val authenticationService: GoogleAuthenticationService,
+    private val userRepository: UserRepository
 ) : ViewModel() {
 
     var state by mutableStateOf(SignWithGoogleState())
