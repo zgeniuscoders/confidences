@@ -14,31 +14,34 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import cd.zgeniuscoders.confidences.chat.presentation.components.AvatarCard
+import cd.zgeniuscoders.confidences.user.presentation.profile.ProfileState
 
 @Composable
-fun UserProfileItem() {
-    Card {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(10.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column {
+fun UserProfileItem(state: ProfileState) {
+    if (state.user != null) {
+        Card {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column {
 
-                Text(
-                    text = "Zgenius Matondo",
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Medium
-                )
-                Text(
-                    text = "+243 82 68 61 073",
-                    color = MaterialTheme.colorScheme.secondary
-                )
+                    Text(
+                        text = state.user.username,
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Medium
+                    )
+                    Text(
+                        text = state.user.phoneNumber,
+                        color = MaterialTheme.colorScheme.secondary
+                    )
 
+                }
+                AvatarCard(initialLetter = 'Z')
             }
-            AvatarCard(initialLetter = 'Z')
         }
     }
 }

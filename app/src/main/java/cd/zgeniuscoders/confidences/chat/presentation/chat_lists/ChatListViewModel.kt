@@ -26,6 +26,7 @@ class ChatListViewModel(
     private var _state = MutableStateFlow(ChatListState())
     val state = _state
         .onStart {
+            getMessages()
         }
         .stateIn(
             viewModelScope,
@@ -33,9 +34,6 @@ class ChatListViewModel(
             _state.value
         )
 
-    init {
-        getMessages()
-    }
 
     fun onTriggerEvent(event: ChatListEvent){
 
@@ -44,13 +42,17 @@ class ChatListViewModel(
     private fun getMessages(){
         Log.i("MESSAGE", "before getting message")
         viewModelScope.launch {
+
+            _state.update {
+                it.copy(message = "")
+            }
+
             latestMessageRepository
                 .getLatestMessage(user!!.uid)
                 .onEach { res ->
 
                     when (res) {
                         is Result.Error -> {
-                            Log.i("MESSAGE", "error")
 
                             _state.update {
                                 it.copy(isLoading = false, message = res.message.toString())
@@ -58,7 +60,6 @@ class ChatListViewModel(
                         }
 
                         is Result.Success -> {
-                            Log.i("MESSAGE", "getting message")
 
                             _state.update {
                                 it.copy(
@@ -66,8 +67,6 @@ class ChatListViewModel(
                                     messages = res.data!!.toLatsMessageList()
                                 )
                             }
-
-                            Log.i("MESSAGE", res.data!!.toLatsMessageList().toString())
 
                         }
                     }

@@ -83,8 +83,8 @@ class ChatViewModel(
                             _state.update {
                                 it.copy(
                                     currentUserId = user.userId,
-                                    senderRoom = user.userId + receiverId + user.phoneNumber,
-                                    receiverRoom = receiverId + user.userId + user.phoneNumber
+                                    senderRoom = user.userId + receiverId,
+                                    receiverRoom = receiverId + user.userId
                                 )
                             }
 
@@ -106,6 +106,7 @@ class ChatViewModel(
 
             Log.i("ROOM", "sender room : $${state.value.senderRoom}")
             Log.i("ROOM", "receiver room : $${state.value.receiverRoom}")
+            Log.i("ROOM", "receiver : $${receiverId}")
 
             messageRepository
                 .getMessages(state.value.senderRoom)
@@ -161,17 +162,23 @@ class ChatViewModel(
     private fun saveLatestMessage() {
         viewModelScope.launch {
 
-            val message = LatestMessageRequest(
+            val senderLastMsg = LatestMessageRequest(
                 receiverId = receiverId,
                 message = state.value.message,
                 sendAt = time
             )
 
-            latestMessageRepository
-                .saveLatestMessage(receiverId, message)
+            val receiverLastMsg = LatestMessageRequest(
+                receiverId = currentUser!!,
+                message = state.value.message,
+                sendAt = time
+            )
 
             latestMessageRepository
-                .saveLatestMessage(currentUser!!, message)
+                .saveLatestMessage(receiverId, state.value.receiverRoom, receiverLastMsg)
+
+            latestMessageRepository
+                .saveLatestMessage(currentUser, state.value.senderRoom, senderLastMsg)
         }
     }
 

@@ -60,13 +60,14 @@ class FirebaseLatestMessageRepository(
 
     override suspend fun saveLatestMessage(
         userId: String,
+        room: String,
         request: LatestMessageRequest
     ): Result<Boolean> {
         return try {
             collection
                 .document(userId)
                 .collection("latestMessage")
-                .document(request.receiverId)
+                .document(room)
                 .set(request)
                 .await()
 

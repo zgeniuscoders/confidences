@@ -11,6 +11,7 @@ interface LatestMessageRepository {
 
     suspend fun saveLatestMessage(
         userId: String,
+        room: String,
         request: LatestMessageRequest
     ): Result<Boolean>
 

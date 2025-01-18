@@ -139,6 +139,8 @@ class FirebaseUserRepository(
             try {
                 val numbers = phoneNumbers.map { it.numberPhone }
 
+                Log.i("NUMBERS", numbers.toString())
+
                 collection
                     .whereIn("phoneNumber", numbers)
                     .addSnapshotListener { value, error ->

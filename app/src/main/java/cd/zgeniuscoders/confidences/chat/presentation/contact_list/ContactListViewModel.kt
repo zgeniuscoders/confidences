@@ -1,7 +1,6 @@
 package cd.zgeniuscoders.confidences.chat.presentation.contact_list
 
 import android.util.Log
-import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cd.zgeniuscoders.confidences.chat.data.mappers.toContactList
@@ -31,8 +30,7 @@ class ContactListViewModel(
         state.copy(
             contacts = contactLists.toContactList()
         )
-    }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), _state.value)
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, _state.value)
 
     init {
         contactService
@@ -86,9 +84,22 @@ class ContactListViewModel(
 
                             is Result.Success -> {
 
+                                val users = res.data!!.toUserList()
+
+                                val commonContactsNumbers =
+                                    state.value.contacts.map { it.numberPhone }
+                                        .intersect(users.map { it.phoneNumber })
+
+                                val contacts =
+                                    state.value.contacts.filter { it.numberPhone in commonContactsNumbers }
+//
+//                                val contacts = state.value.contacts.sortedBy { it.numberPhone in commonContactsNumbers }
+
+                                Log.i("CONTACTS", contacts.toString())
+
                                 _state.update {
                                     it.copy(
-                                        users = res.data!!.toUserList(),
+                                        users = res.data.toUserList(), filterContacts = contacts,
                                         isLoading = false
                                     )
                                 }

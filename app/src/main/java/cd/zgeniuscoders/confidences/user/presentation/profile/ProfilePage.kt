@@ -51,7 +51,11 @@ fun ProfilePage(navController: NavHostController, snackbarHostState: SnackbarHos
 
     LaunchedEffect(state.isLogout) {
         if (state.isLogout) {
-            navController.navigate(Routes.AuthenticationNavGraph)
+            navController.navigate(Routes.AuthenticationNavGraph){
+                popUpTo(navController.graph.id){
+                    inclusive = true
+                }
+            }
         }
     }
 
@@ -87,7 +91,7 @@ fun ProfilePageBody(state: ProfileState, onEvent: (event: ProfileEvent) -> Unit)
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             item {
-                UserProfileItem()
+                UserProfileItem(state)
             }
             items(settingsItems) { item ->
                 SettingItem(item)
