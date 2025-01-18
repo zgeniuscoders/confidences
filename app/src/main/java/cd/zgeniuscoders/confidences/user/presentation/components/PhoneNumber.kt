@@ -23,8 +23,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cd.zgeniuscoders.confidences.R
-import cd.zgeniuscoders.confidences.user.presentation.OnboardingEvent
-import cd.zgeniuscoders.confidences.user.presentation.OnboardingState
+import cd.zgeniuscoders.confidences.user.presentation.onboarding.OnboardingEvent
+import cd.zgeniuscoders.confidences.user.presentation.onboarding.OnboardingState
 import network.chaintech.cmpcountrycodepicker.model.CountryDetails
 import network.chaintech.cmpcountrycodepicker.ui.CountryPickerBasicTextField
 

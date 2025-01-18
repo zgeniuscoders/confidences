@@ -1,4 +1,4 @@
-package cd.zgeniuscoders.confidences.user.presentation
+package cd.zgeniuscoders.confidences.user.presentation.onboarding
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

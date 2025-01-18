@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -44,17 +45,23 @@ class MainActivity : ComponentActivity() {
                 val vm = koinViewModel<AppViewModel>()
                 val state by vm.state.collectAsStateWithLifecycle()
 
-                App(
-                    navController,
-                    snackbarHostState,
-                    currentRoute
-                )
+                Surface {
+                    App(
+                        navController,
+                        snackbarHostState,
+                        currentRoute
+                    )
+
+                }
 
                 LaunchedEffect(state.isLogged) {
-                    if (state.isLogged) {
-                        navController.navigate(Routes.Authentication)
-                    } else {
-                        navController.navigate(Routes.MainNavGraph)
+
+                    if (!state.isLogged) {
+                        navController.navigate(Routes.AuthenticationNavGraph) {
+                            popUpTo(navController.graph.id) {
+                                inclusive = true
+                            }
+                        }
                     }
 
                     keepConditionScreen = false

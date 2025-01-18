@@ -17,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import cd.zgeniuscoders.confidences.R
 import cd.zgeniuscoders.confidences.core.domain.utils.Routes
@@ -27,6 +26,9 @@ import cd.zgeniuscoders.confidences.user.presentation.components.PhoneNumber
 import cd.zgeniuscoders.confidences.user.presentation.components.Privacy
 import cd.zgeniuscoders.confidences.user.presentation.components.Username
 import cd.zgeniuscoders.confidences.user.presentation.components.Welcome
+import cd.zgeniuscoders.confidences.user.presentation.onboarding.OnboardingEvent
+import cd.zgeniuscoders.confidences.user.presentation.onboarding.OnboardingState
+import cd.zgeniuscoders.confidences.user.presentation.onboarding.OnboardingViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable

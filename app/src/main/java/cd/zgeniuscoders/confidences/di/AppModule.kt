@@ -13,7 +13,7 @@ import cd.zgeniuscoders.confidences.core.domain.services.SessionService
 import cd.zgeniuscoders.confidences.core.presentation.AppViewModel
 import cd.zgeniuscoders.confidences.user.data.repository.FirebaseUserRepository
 import cd.zgeniuscoders.confidences.user.domain.repository.UserRepository
-import cd.zgeniuscoders.confidences.user.presentation.OnboardingViewModel
+import cd.zgeniuscoders.confidences.user.presentation.onboarding.OnboardingViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import org.koin.android.ext.koin.androidContext

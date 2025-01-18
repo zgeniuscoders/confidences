@@ -14,7 +14,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import cd.zgeniuscoders.confidences.R
-import cd.zgeniuscoders.confidences.user.presentation.OnboardingEvent
 import cd.zgeniuscoders.confidences.ui.theme.ConfidencesTheme
 
 @Composable

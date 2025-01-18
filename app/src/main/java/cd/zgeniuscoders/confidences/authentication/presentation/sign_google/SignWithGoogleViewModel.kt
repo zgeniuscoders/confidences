@@ -15,7 +15,8 @@ import kotlinx.coroutines.launch
 
 class SignWithGoogleViewModel(
     private val authenticationService: GoogleAuthenticationService,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val userId: String?
 ) : ViewModel() {
 
     var state by mutableStateOf(SignWithGoogleState())
@@ -32,18 +33,53 @@ class SignWithGoogleViewModel(
     private fun signWithGoogle() {
         viewModelScope.launch(Dispatchers.IO) {
 
+            state = state.copy(message = "")
             val response = authenticationService.signWithGoogle()
+
 
             response.onEach {
 
-                state = when (it) {
+                when (it) {
 
                     is Result.Error -> {
-                        state.copy(message = it.message.toString())
+                        state = state.copy(
+                            message = it.message.toString(),
+                            hasAccount = false,
+                            isLogged = false,
+                            canPass = false
+                        )
                     }
 
                     is Result.Success -> {
-                        state.copy(isLogged = true)
+
+                        state = state.copy(message = "")
+
+                        userRepository
+                            .hasAccount(userId!!)
+                            .onEach { res ->
+
+                                when (res) {
+                                    is Result.Error -> {
+                                        state = state.copy(
+                                            message = it.message.toString(),
+                                            hasAccount = false,
+                                            isLogged = false,
+                                            canPass = false
+                                        )
+                                    }
+
+                                    is Result.Success -> {
+                                        state = state.copy(
+                                            isLogged = true,
+                                            message = "",
+                                            hasAccount = true,
+                                            canPass = true
+                                        )
+                                    }
+                                }
+
+                            }.launchIn(viewModelScope)
+
                     }
 
                 }

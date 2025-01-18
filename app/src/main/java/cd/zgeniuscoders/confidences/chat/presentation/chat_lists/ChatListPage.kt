@@ -3,12 +3,14 @@ package cd.zgeniuscoders.confidences.chat.presentation.chat_lists
 import android.Manifest
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -27,13 +29,17 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import cd.zgeniuscoders.confidences.R
 import cd.zgeniuscoders.confidences.chat.domain.models.LatestMessage
 import cd.zgeniuscoders.confidences.chat.presentation.components.AvatarCard
 import cd.zgeniuscoders.confidences.chat.presentation.components.UserItemCard
@@ -110,45 +116,68 @@ fun ChatListBody(
         modifier = Modifier.fillMaxSize()
     ) { innerPadding ->
 
-        LazyColumn(
-            modifier = Modifier.padding(innerPadding),
-            verticalArrangement = Arrangement.spacedBy(10.dp)
-        ) {
-            items(state.messages) { message ->
-                UserItemCard(
-                    navHostController = navHostController,
-                    hasAccount = true,
-                    userId = message.receiverId
-                ) {
-                    AvatarCard(initialLetter = 'A')
+        if (state.messages.isEmpty()) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(20.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Image(
+                    modifier = Modifier.size(250.dp),
+                    painter = painterResource(id = R.drawable.empty_message),
+                    contentDescription = null
+                )
+                Text(
+                    text = "Pour commnecer la discussion, veuillez appuyer sur le bouton Contact",
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.secondary
+                )
+            }
+        } else {
+            LazyColumn(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                items(state.messages) { message ->
+                    UserItemCard(
+                        navHostController = navHostController,
+                        hasAccount = true,
+                        userId = message.receiverId
+                    ) {
+                        AvatarCard(initialLetter = 'A')
 
-                    Column {
-                        Row(
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
+                        Column {
+                            Row(
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Text(
+                                    "zgeniuscoders", style = MaterialTheme.typography.titleMedium
+                                )
+                                Text(
+                                    text = "20:00",
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    fontWeight = FontWeight.Medium,
+                                    color = MaterialTheme.colorScheme.primary
+                                )
+                            }
+
                             Text(
-                                "zgeniuscoders", style = MaterialTheme.typography.titleMedium
-                            )
-                            Text(
-                                text = "20:00",
-                                style = MaterialTheme.typography.bodyMedium,
-                                fontWeight = FontWeight.Medium,
-                                color = MaterialTheme.colorScheme.primary
+                                message.message,
+                                style = MaterialTheme.typography.titleMedium,
+                                color = MaterialTheme.colorScheme.secondary
                             )
                         }
 
-                        Text(
-                            message.message,
-                            style = MaterialTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.secondary
-                        )
                     }
-
                 }
-
             }
         }
+
 
     }
 
@@ -162,7 +191,7 @@ fun ChatListPreview(modifier: Modifier = Modifier) {
         ChatListBody(
             rememberNavController(),
             state = ChatListState(
-                messages = (1..10).map { lastMessage }
+//                messages = (1..10).map { lastMessage }
             )
         ) {
 

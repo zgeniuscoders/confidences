@@ -12,6 +12,7 @@ import cd.zgeniuscoders.confidences.chat.presentation.chat_lists.ChatListPage
 import cd.zgeniuscoders.confidences.chat.presentation.contact_list.ContactListPage
 import cd.zgeniuscoders.confidences.core.domain.utils.Routes
 import cd.zgeniuscoders.confidences.user.presentation.OnBoardingPage
+import cd.zgeniuscoders.confidences.user.presentation.profile.ProfilePage
 
 @Composable
 fun App(
@@ -22,7 +23,7 @@ fun App(
 
     NavHost(
         navController = navController,
-        startDestination = Routes.MainNavGraph
+        startDestination = Routes.AuthenticationNavGraph
     ) {
 
         navigation<Routes.MainNavGraph>(
@@ -37,7 +38,10 @@ fun App(
             }
 
             composable<Routes.UserProfile> {
-
+                ProfilePage(
+                    navController,
+                    snackbarHostState
+                )
             }
 
             composable<Routes.ContactList> {

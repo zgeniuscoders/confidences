@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cd.zgeniuscoders.confidences.core.domain.services.SessionService
 import cd.zgeniuscoders.confidences.core.domain.utils.Constant
+import cd.zgeniuscoders.confidences.user.domain.repository.UserRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.launchIn
@@ -14,7 +15,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class AppViewModel(
-    val sessionService: SessionService
+    private val sessionService: SessionService,
 ) : ViewModel() {
 
     private var _state = MutableStateFlow(AppState())
