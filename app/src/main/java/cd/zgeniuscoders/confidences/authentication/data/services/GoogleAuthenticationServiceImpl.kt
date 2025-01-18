@@ -1,13 +1,14 @@
 package cd.zgeniuscoders.confidences.authentication.data.services
 
 import android.content.Context
-import android.util.Log
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
 import cd.zgeniuscoders.confidences.R
+import cd.zgeniuscoders.confidences.authentication.domain.models.AuthResponse
 import cd.zgeniuscoders.confidences.authentication.domain.services.GoogleAuthenticationService
 import cd.zgeniuscoders.confidences.core.domain.utils.Result
+import cd.zgeniuscoders.confidences.user.domain.models.User
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
@@ -51,7 +52,7 @@ class GoogleAuthenticationServiceImpl(
             .build()
     }
 
-    override suspend fun signWithGoogle(): Flow<Result<Boolean>> = callbackFlow {
+    override suspend fun signWithGoogle(): Flow<Result<AuthResponse>> = callbackFlow {
 
         val googleIdOptions = getGoogleIdOptions()
 
@@ -85,12 +86,19 @@ class GoogleAuthenticationServiceImpl(
                         auth.signInWithCredential(firebaseCredential)
                             .addOnCompleteListener {
                                 if (it.isSuccessful) {
-                                    Log.e("SIGN_WITH_GOOGLE", "user sign in")
 
                                     trySend(
 
                                         Result.Success(
-                                            data = true
+                                            data = auth.currentUser?.run {
+                                                User(
+                                                    userId = uid,
+                                                    username = displayName!!,
+                                                    phoneNumber = "",
+                                                    email = email!!,
+                                                    profilePictureUrl = ""
+                                                )
+                                            }?.let { it1 -> AuthResponse(data = it1) }
                                         )
                                     )
                                 } else {

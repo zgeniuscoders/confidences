@@ -14,6 +14,7 @@ import cd.zgeniuscoders.confidences.core.presentation.AppViewModel
 import cd.zgeniuscoders.confidences.user.data.repository.FirebaseUserRepository
 import cd.zgeniuscoders.confidences.user.domain.repository.UserRepository
 import cd.zgeniuscoders.confidences.user.presentation.onboarding.OnboardingViewModel
+import cd.zgeniuscoders.confidences.user.presentation.profile.ProfileViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import org.koin.android.ext.koin.androidContext
@@ -30,7 +31,7 @@ val appModule = module {
         FirebaseAuth.getInstance()
     }
 
-    single<String?> {
+    factory<String?> {
         FirebaseAuth.getInstance().currentUser?.uid
     }
 
@@ -38,7 +39,7 @@ val appModule = module {
         ContactService(androidContext())
     }
 
-    single<SessionService> {
+    factory<SessionService> {
         DatastoreSessionServiceImpl(androidContext())
     }
 
@@ -56,6 +57,7 @@ val appModule = module {
         FirebaseLatestMessageRepository(get())
     }
 
+    viewModelOf(::ProfileViewModel)
     viewModelOf(::AppViewModel)
     viewModelOf(::ChatViewModel)
     viewModelOf(::OnboardingViewModel)

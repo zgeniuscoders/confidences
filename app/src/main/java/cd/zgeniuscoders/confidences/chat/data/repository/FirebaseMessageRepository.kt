@@ -67,7 +67,10 @@ class FirebaseMessageRepository(
             val docId = collection.document().id
             request.id = docId
 
-            getRoom(room).document(request.id).set(request).await()
+            getRoom(room)
+                .document(request.id)
+                .set(request)
+                .await()
 
 
             Result.Success(

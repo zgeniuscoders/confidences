@@ -37,7 +37,7 @@ fun App(
                 )
             }
 
-            composable<Routes.UserProfile> {
+            composable<Routes.Settings> {
                 ProfilePage(
                     navController,
                     snackbarHostState

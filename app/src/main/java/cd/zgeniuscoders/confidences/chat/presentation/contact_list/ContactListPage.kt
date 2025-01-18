@@ -1,5 +1,6 @@
 package cd.zgeniuscoders.confidences.chat.presentation.contact_list
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -80,7 +81,6 @@ fun ContactListPageBody(
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             items(state.contacts) { contact ->
-//            val hasAccount = state.users.any { it.phoneNumber == contact.numberPhone }
                 val user = state.users.find { it.phoneNumber == contact.numberPhone }
 
                 UserItemCard(

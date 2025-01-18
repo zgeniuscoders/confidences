@@ -56,8 +56,8 @@ class MainActivity : ComponentActivity() {
 
                 LaunchedEffect(state.isLogged) {
 
-                    if (!state.isLogged) {
-                        navController.navigate(Routes.AuthenticationNavGraph) {
+                    if (state.isLogged) {
+                        navController.navigate(Routes.MainNavGraph) {
                             popUpTo(navController.graph.id) {
                                 inclusive = true
                             }

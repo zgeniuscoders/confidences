@@ -92,10 +92,12 @@ fun ChatListBody(
                             contentDescription = "search_icon"
                         )
                     }
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = {
+                        navHostController.navigate(Routes.Settings)
+                    }) {
                         Icon(
                             Icons.Rounded.Person,
-                            contentDescription = "search_icon"
+                            contentDescription = "parametre"
                         )
                     }
                 }

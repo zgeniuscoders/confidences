@@ -35,26 +35,20 @@ class ChatViewModel(
 
     private val receiverId = savedStateHandle.toRoute<Routes.Chat>().userId
 
-    private val senderRoom = currentUser + receiverId
-    private val receiverRoom = receiverId + currentUser
-
     private val time = Date().time
 
     private var _state = MutableStateFlow(ChatState())
     val state = _state
         .onStart {
-            getCurrentUserId()
+            getCurrentUser()
             getUser()
         }
         .stateIn(
             viewModelScope,
-            SharingStarted.WhileSubscribed(5000L),
+            SharingStarted.Eagerly,
             _state.value
         )
 
-    init {
-        getMessage()
-    }
 
     fun onTriggerEvent(event: ChatEvent) {
         when (event) {
@@ -63,11 +57,42 @@ class ChatViewModel(
         }
     }
 
-    private fun getCurrentUserId() {
+    private fun getCurrentUser() {
         viewModelScope.launch {
+
             _state.update {
-                it.copy(currentUserId = currentUser!!)
+                it.copy(message = "")
             }
+
+            userRepository
+                .getUserById(currentUser!!)
+                .onEach { res ->
+
+                    when (res) {
+
+                        is Result.Error -> {
+                            _state.update {
+                                it.copy(message = res.message.toString())
+                            }
+                        }
+
+                        is Result.Success -> {
+
+                            val user = res.data!!.toUserModel()
+
+                            _state.update {
+                                it.copy(
+                                    currentUserId = user.userId,
+                                    senderRoom = user.userId + receiverId + user.phoneNumber,
+                                    receiverRoom = receiverId + user.userId + user.phoneNumber
+                                )
+                            }
+
+                            getMessage()
+                        }
+                    }
+
+                }.launchIn(viewModelScope)
         }
     }
 
@@ -79,8 +104,11 @@ class ChatViewModel(
                 it.copy(isLoading = true)
             }
 
+            Log.i("ROOM", "sender room : $${state.value.senderRoom}")
+            Log.i("ROOM", "receiver room : $${state.value.receiverRoom}")
+
             messageRepository
-                .getMessages(senderRoom)
+                .getMessages(state.value.senderRoom)
                 .onEach { res ->
 
                     when (res) {
@@ -157,10 +185,10 @@ class ChatViewModel(
             )
 
             messageRepository
-                .sendMessage(senderRoom, message)
+                .sendMessage(state.value.senderRoom, message)
 
             messageRepository
-                .sendMessage(receiverRoom, message)
+                .sendMessage(state.value.receiverRoom, message)
 
             saveLatestMessage()
 

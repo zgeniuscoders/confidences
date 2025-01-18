@@ -139,8 +139,6 @@ class FirebaseUserRepository(
             try {
                 val numbers = phoneNumbers.map { it.numberPhone }
 
-                Log.i("CONTACT_FIR", numbers.toString())
-
                 collection
                     .whereIn("phoneNumber", numbers)
                     .addSnapshotListener { value, error ->
@@ -155,7 +153,7 @@ class FirebaseUserRepository(
 
                         if (value != null) {
                             val users = value.toObjects(UserDtoData::class.java)
-                            Log.i("CONTACT", "firebase $users")
+
                             trySend(
                                 Result.Success(
                                     data = UsersDto(

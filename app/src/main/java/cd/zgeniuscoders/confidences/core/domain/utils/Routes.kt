@@ -24,6 +24,9 @@ sealed interface Routes {
     data object ContactList : Routes
 
     @Serializable
+    data object Settings : Routes
+
+    @Serializable
     data class Chat(
         val userId: String
     ) : Routes

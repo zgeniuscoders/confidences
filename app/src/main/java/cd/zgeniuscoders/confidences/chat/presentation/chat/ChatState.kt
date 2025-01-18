@@ -9,5 +9,7 @@ data class ChatState(
     val isLoading: Boolean = false,
     val message: String = "",
     val currentUserId: String = "",
+    val senderRoom: String = "",
+    val receiverRoom: String = "",
     val error: String = ""
 )
