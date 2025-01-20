@@ -153,7 +153,11 @@ fun ChatListBody(
                         hasAccount = true,
                         userId = message.receiverId
                     ) {
-                        AvatarCard(initialLetter = 'A', size = 50.dp)
+
+                        AvatarCard(
+                            initialLetter = if (user != null) user.username[0] else 'Z',
+                            size = 50.dp
+                        )
 
                         Column {
                             Row(

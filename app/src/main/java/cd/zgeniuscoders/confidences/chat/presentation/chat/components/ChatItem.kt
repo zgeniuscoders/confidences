@@ -21,7 +21,7 @@ fun ChatItem(message: Message, currentUserId: String) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(10.dp),
+            .padding(vertical = 2.dp, horizontal = 10.dp),
         horizontalAlignment = if (message.senderId == currentUserId) Alignment.End else Alignment.Start
     ) {
         Card(
@@ -40,13 +40,6 @@ fun ChatItem(message: Message, currentUserId: String) {
                 Text(
                     message.message,
                 )
-                Row {
-                    Spacer(modifier = Modifier.weight(1f))
-                    Text(
-                        "${message.timestamp}",
-                        style = MaterialTheme.typography.labelLarge
-                    )
-                }
             }
         }
     }

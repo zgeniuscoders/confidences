@@ -12,9 +12,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import java.util.Locale
 
 @Composable
 fun AvatarCard(
@@ -33,7 +35,7 @@ fun AvatarCard(
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = "$initialLetter",
+                text = "$initialLetter".capitalize(Locale.ROOT),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
                 color = if (isSystemInDarkTheme()) Color.Black else Color.White
