@@ -1,5 +1,6 @@
 package cd.zgeniuscoders.confidences.chat.presentation.chat
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -26,12 +27,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import cd.zgeniuscoders.confidences.R
 import cd.zgeniuscoders.confidences.chat.domain.models.Message
 import cd.zgeniuscoders.confidences.chat.presentation.chat.components.ChatItem
 import cd.zgeniuscoders.confidences.chat.presentation.chat.components.ChatTopBar
@@ -62,6 +66,16 @@ fun ChatBody(
             ChatTopBar(navHostController = navHostController, state.user)
         }
     ) { innerP ->
+        Box(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Image(
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop,
+                painter = painterResource(id = R.drawable.chat_bg),
+                contentDescription = "arriere plan chat"
+            )
+        }
         ConstraintLayout(
             modifier = Modifier
                 .padding(innerP)
