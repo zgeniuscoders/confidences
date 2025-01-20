@@ -145,6 +145,9 @@ fun ChatListBody(
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 items(state.messages) { message ->
+
+                    val user = state.users.find { it.userId == message.receiverId }
+
                     UserItemCard(
                         navHostController = navHostController,
                         hasAccount = true,
@@ -158,7 +161,7 @@ fun ChatListBody(
                                 modifier = Modifier.fillMaxWidth()
                             ) {
                                 Text(
-                                    "zgeniuscoders", style = MaterialTheme.typography.titleMedium
+                                    user?.username ?: "unknown", style = MaterialTheme.typography.titleMedium
                                 )
                                 Text(
                                     text = "20:00",
@@ -169,7 +172,7 @@ fun ChatListBody(
                             }
 
                             Text(
-                                message.message,
+                                message.message.substring(0, 34) + "...",
                                 style = MaterialTheme.typography.titleMedium,
                                 color = MaterialTheme.colorScheme.secondary
                             )
@@ -193,7 +196,7 @@ fun ChatListPreview(modifier: Modifier = Modifier) {
         ChatListBody(
             rememberNavController(),
             state = ChatListState(
-//                messages = (1..10).map { lastMessage }
+                messages = (1..10).map { lastMessage }
             )
         ) {
 
@@ -204,7 +207,7 @@ fun ChatListPreview(modifier: Modifier = Modifier) {
 
 internal val lastMessage = LatestMessage(
     "1",
-    message = "Petit nanga",
+    message = "Petit nanga oza bien ? po nga naza nanga bien osalani ",
     receiverId = "1",
     image = null,
     timestamp = 1003000

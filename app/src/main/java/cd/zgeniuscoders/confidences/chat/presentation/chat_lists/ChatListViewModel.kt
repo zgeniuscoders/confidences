@@ -1,11 +1,13 @@
 package cd.zgeniuscoders.confidences.chat.presentation.chat_lists
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cd.zgeniuscoders.confidences.chat.data.mappers.toLatsMessageList
+import cd.zgeniuscoders.confidences.chat.domain.models.LatestMessage
 import cd.zgeniuscoders.confidences.chat.domain.repository.LatestMessageRepository
 import cd.zgeniuscoders.confidences.core.domain.utils.Result
+import cd.zgeniuscoders.confidences.user.data.mappers.toUserList
+import cd.zgeniuscoders.confidences.user.domain.repository.UserRepository
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -18,6 +20,7 @@ import kotlinx.coroutines.launch
 
 class ChatListViewModel(
     private val latestMessageRepository: LatestMessageRepository,
+    private val userRepository: UserRepository,
     private val currentUser: FirebaseAuth
 ) : ViewModel() {
 
@@ -40,7 +43,6 @@ class ChatListViewModel(
     }
 
     private fun getMessages(){
-        Log.i("MESSAGE", "before getting message")
         viewModelScope.launch {
 
             _state.update {
@@ -53,7 +55,6 @@ class ChatListViewModel(
 
                     when (res) {
                         is Result.Error -> {
-
                             _state.update {
                                 it.copy(isLoading = false, message = res.message.toString())
                             }
@@ -61,12 +62,9 @@ class ChatListViewModel(
 
                         is Result.Success -> {
 
-                            _state.update {
-                                it.copy(
-                                    isLoading = false,
-                                    messages = res.data!!.toLatsMessageList()
-                                )
-                            }
+                            val latestMessages = res.data!!.toLatsMessageList()
+
+                            getUsers(latestMessages)
 
                         }
                     }
@@ -74,6 +72,46 @@ class ChatListViewModel(
                 }
                 .launchIn(viewModelScope)
         }
+    }
+
+    private fun getUsers(latestMessages: List<LatestMessage>) {
+
+        viewModelScope.launch {
+
+            val usersIds = latestMessages.map { it.receiverId }
+
+            userRepository
+                .getUsersByIds(usersIds)
+                .onEach { res ->
+
+                    when (res) {
+                        is Result.Error -> {
+                            _state.update {
+                                it.copy(isLoading = false, message = res.message.toString())
+                            }
+                        }
+
+                        is Result.Success -> {
+
+                            val users = res.data!!.toUserList()
+
+                            _state.update {
+                                it.copy(
+                                    isLoading = false,
+                                    messages = latestMessages,
+                                    users = users
+                                )
+                            }
+                        }
+                    }
+
+                }
+                .launchIn(viewModelScope)
+
+
+        }
+
+
     }
 
 }

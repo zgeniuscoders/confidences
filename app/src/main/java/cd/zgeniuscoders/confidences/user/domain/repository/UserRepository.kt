@@ -1,7 +1,6 @@
 package cd.zgeniuscoders.confidences.user.domain.repository
 
 import cd.zgeniuscoders.confidences.authentication.domain.models.UserRequest
-import cd.zgeniuscoders.confidences.chat.data.services.ContactService
 import cd.zgeniuscoders.confidences.chat.domain.models.Contact
 import cd.zgeniuscoders.confidences.core.domain.utils.Result
 import cd.zgeniuscoders.confidences.user.data.dto.UserDto
@@ -19,5 +18,7 @@ interface UserRepository {
     suspend fun getUserById(userId: String): Flow<Result<UserDto>>
 
     suspend fun getUsersByPhoneNumber(phoneNumbers: List<Contact>): Flow<Result<UsersDto>>
+
+    suspend fun getUsersByIds(ids: List<String>): Flow<Result<UsersDto>>
 
 }

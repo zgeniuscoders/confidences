@@ -176,4 +176,44 @@ class FirebaseUserRepository(
 
             awaitClose()
         }
+
+    override suspend fun getUsersByIds(ids: List<String>): Flow<Result<UsersDto>> =
+        callbackFlow {
+            try {
+
+                collection
+                    .whereIn("userId", ids)
+                    .addSnapshotListener { value, error ->
+
+                        if (error != null) {
+                            trySend(
+                                Result.Error(
+                                    message = error.message.toString()
+                                )
+                            )
+                        }
+
+                        if (value != null) {
+                            val users = value.toObjects(UserDtoData::class.java)
+
+                            trySend(
+                                Result.Success(
+                                    data = UsersDto(
+                                        data = users
+                                    )
+                                )
+                            )
+                        }
+                    }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                trySend(
+                    Result.Error(
+                        message = e.message.toString()
+                    )
+                )
+            }
+
+            awaitClose()
+        }
 }
