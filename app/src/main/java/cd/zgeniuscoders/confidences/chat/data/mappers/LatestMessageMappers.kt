@@ -10,7 +10,8 @@ fun LatestMessageDto.toLatsMessageList(): List<LatestMessage> {
             message = it.message,
             image = it.image,
             timestamp = it.sendAt,
-            receiverId = it.receiverId
+            receiverId = it.receiverId,
+            room = it.room
         )
     }
 }

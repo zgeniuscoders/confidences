@@ -89,7 +89,9 @@ fun ContactListPageBody(
                 UserItemCard(
                     navHostController = navHostController,
                     hasAccount = user != null,
-                    userId = user?.userId
+                    userId = user?.userId,
+                    phoneNumber = user?.phoneNumber,
+                    isFirst = true
                 ) {
 
                     AvatarCard(initialLetter = contact.name[0])

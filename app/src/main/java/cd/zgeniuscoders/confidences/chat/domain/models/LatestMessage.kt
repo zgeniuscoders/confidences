@@ -5,5 +5,6 @@ data class LatestMessage(
     var message: String,
     val receiverId: String,
     val image: String?,
+    val room: String,
     val timestamp: Long
 )

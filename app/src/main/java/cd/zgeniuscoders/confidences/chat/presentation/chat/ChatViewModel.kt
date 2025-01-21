@@ -34,6 +34,8 @@ class ChatViewModel(
 ) : ViewModel() {
 
     private val receiverId = savedStateHandle.toRoute<Routes.Chat>().userId
+    private val receiverPhoneNumber = savedStateHandle.toRoute<Routes.Chat>().phoneNumber
+    private val isSenderSentMessageFirst = savedStateHandle.toRoute<Routes.Chat>().isFirst
 
     private val time = Date().time
 
@@ -83,8 +85,8 @@ class ChatViewModel(
                             _state.update {
                                 it.copy(
                                     currentUserId = user.userId,
-                                    senderRoom = user.userId + receiverId,
-                                    receiverRoom = receiverId + user.userId
+                                    senderRoom = user.userId + receiverId + receiverPhoneNumber,
+                                    receiverRoom = receiverId + user.userId + receiverPhoneNumber
                                 )
                             }
 
@@ -162,16 +164,24 @@ class ChatViewModel(
     private fun saveLatestMessage() {
         viewModelScope.launch {
 
+            val room = if(isSenderSentMessageFirst) {
+                state.value.currentUserId
+            }else{
+                receiverId
+            }
+
             val senderLastMsg = LatestMessageRequest(
                 receiverId = receiverId,
                 message = state.value.message,
-                sendAt = time
+                sendAt = time,
+                room = room
             )
 
             val receiverLastMsg = LatestMessageRequest(
                 receiverId = currentUser!!,
                 message = state.value.message,
-                sendAt = time
+                sendAt = time,
+                room = room
             )
 
             latestMessageRepository

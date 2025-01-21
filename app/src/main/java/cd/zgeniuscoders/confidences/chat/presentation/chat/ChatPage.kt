@@ -75,7 +75,10 @@ fun ChatBody(
                         }
                     },
                     trailingIcon = {
-                        IconButton(onClick = { onEvent(ChatEvent.OnSendMessageButtonClick) }) {
+                        IconButton(
+                            onClick = { onEvent(ChatEvent.OnSendMessageButtonClick) },
+                            enabled = state.message.isNotEmpty()
+                        ) {
                             Icon(
                                 imageVector = Icons.Rounded.Send,
                                 contentDescription = "emoji_icon"

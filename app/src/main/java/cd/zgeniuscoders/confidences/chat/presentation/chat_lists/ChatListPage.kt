@@ -5,6 +5,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,6 +18,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AddComment
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -118,70 +120,110 @@ fun ChatListBody(
         modifier = Modifier.fillMaxSize()
     ) { innerPadding ->
 
-        if (state.messages.isEmpty()) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(20.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Image(
-                    modifier = Modifier.size(250.dp),
-                    painter = painterResource(id = R.drawable.empty_message),
-                    contentDescription = null
-                )
-                Text(
-                    text = "Pour commnecer la discussion, veuillez appuyer sur le bouton Contact",
-                    textAlign = TextAlign.Center,
-                    color = MaterialTheme.colorScheme.secondary
-                )
+        when {
+            state.isLoading -> {
+                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator()
+                }
             }
-        } else {
-            LazyColumn(
-                modifier = Modifier
-                    .padding(innerPadding)
-                    .fillMaxSize(),
-                verticalArrangement = Arrangement.spacedBy(10.dp)
-            ) {
-                items(state.messages) { message ->
 
-                    val user = state.users.find { it.userId == message.receiverId }
+            state.messages.isEmpty() -> {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(20.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Image(
+                        modifier = Modifier.size(250.dp),
+                        painter = painterResource(id = R.drawable.empty_message),
+                        contentDescription = null
+                    )
+                    Text(
+                        text = "Pour commnecer la discussion, veuillez appuyer sur le bouton Contact",
+                        textAlign = TextAlign.Center,
+                        color = MaterialTheme.colorScheme.secondary
+                    )
+                }
+            }
 
-                    UserItemCard(
-                        navHostController = navHostController,
-                        hasAccount = true,
-                        userId = message.receiverId
-                    ) {
+            else -> {
+                LazyColumn(
+                    modifier = Modifier
+                        .padding(innerPadding)
+                        .fillMaxSize(),
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    items(state.messages) { message ->
 
-                        AvatarCard(
-                            initialLetter = if (user != null) user.username[0] else 'Z',
-                            size = 50.dp
-                        )
+                        val user = state.users.find { it.userId == message.receiverId }
+                        var phoneNumber = user?.phoneNumber
+                        var username = user?.username
 
-                        Column {
-                            Row(
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
+                        if (user != null && state.currentUser != null) {
+
+                            val currentUser = state.currentUser
+
+                            phoneNumber = if (message.room == user.userId) {
+                                currentUser.phoneNumber
+                            } else {
+                                user.phoneNumber
+                            }
+
+                            username = if (message.room == currentUser.userId) {
+
+                                val contactUser =
+                                    state.contacts.find { it.numberPhone == user.phoneNumber }
+
+                                contactUser!!.name
+
+                            } else {
+                                user.username
+                            }
+
+                        }
+
+                        UserItemCard(
+                            navHostController = navHostController,
+                            hasAccount = true,
+                            userId = message.receiverId,
+                            phoneNumber = phoneNumber
+                        ) {
+
+                            AvatarCard(
+                                initialLetter = if (username != null) username[0] else 'Z',
+                                size = 50.dp
+                            )
+
+                            Column {
+                                Row(
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Text(
+                                        username ?: "unknown",
+                                        style = MaterialTheme.typography.titleMedium
+                                    )
+                                    Text(
+                                        text = "20:00",
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        fontWeight = FontWeight.Medium,
+                                        color = MaterialTheme.colorScheme.primary
+                                    )
+                                }
+
                                 Text(
-                                    user?.username ?: "unknown", style = MaterialTheme.typography.titleMedium
-                                )
-                                Text(
-                                    text = "20:00",
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    fontWeight = FontWeight.Medium,
-                                    color = MaterialTheme.colorScheme.primary
+                                    if (message.message.length >= 34)
+                                        message.message.substring(0, 34) + "..."
+                                    else
+                                        message.message,
+                                    style = MaterialTheme.typography.titleMedium,
+                                    color = MaterialTheme.colorScheme.secondary
                                 )
                             }
 
-                            Text(
-                                message.message.substring(0, 34) + "...",
-                                style = MaterialTheme.typography.titleMedium,
-                                color = MaterialTheme.colorScheme.secondary
-                            )
                         }
-
                     }
                 }
             }
@@ -214,5 +256,6 @@ internal val lastMessage = LatestMessage(
     message = "Petit nanga oza bien ? po nga naza nanga bien osalani ",
     receiverId = "1",
     image = null,
-    timestamp = 1003000
+    timestamp = 1003000,
+    room = "1"
 )

@@ -19,6 +19,8 @@ fun UserItemCard(
     navHostController: NavHostController,
     hasAccount: Boolean,
     userId: String?,
+    phoneNumber: String?,
+    isFirst: Boolean = false,
     content: @Composable() (RowScope.() -> Unit
     )
 ) {
@@ -28,7 +30,15 @@ fun UserItemCard(
             .clickable(
                 enabled = hasAccount
             ) {
-                navHostController.navigate(Routes.Chat(userId!!))
+
+                navHostController.navigate(
+                    Routes.Chat(
+                        userId!!,
+                        phoneNumber!!,
+                        isFirst
+                    )
+                )
+
             }
     ) {
         Row(

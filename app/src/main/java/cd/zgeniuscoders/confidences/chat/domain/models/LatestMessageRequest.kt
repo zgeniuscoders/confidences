@@ -13,6 +13,8 @@ data class LatestMessageRequest(
     val message: String = "",
     @SerialName("timestap")
     val image: String? = null,
+    @SerialName("room")
+    val room: String = "",
     @SerialName("timestamp")
     val sendAt: Long = 0,
 )
