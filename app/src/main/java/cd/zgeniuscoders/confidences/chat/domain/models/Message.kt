@@ -5,5 +5,5 @@ data class Message(
     var message: String,
     val senderId: String,
     val image: String?,
-    val timestamp: Long
+    val timestamp: String
 )

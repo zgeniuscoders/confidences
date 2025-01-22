@@ -43,7 +43,7 @@ fun UserItemCard(
     ) {
         Row(
             modifier = Modifier
-                .padding(horizontal = 15.dp),
+                .padding(horizontal = 15.dp, vertical = 10.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(15.dp)
         ) {

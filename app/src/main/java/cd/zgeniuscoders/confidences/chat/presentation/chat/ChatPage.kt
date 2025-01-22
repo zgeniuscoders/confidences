@@ -149,5 +149,5 @@ internal val message = Message(
     message = "Petit nanga",
     senderId = "1",
     image = null,
-    timestamp = 1003000
+    timestamp = "12/02/2025"
 )

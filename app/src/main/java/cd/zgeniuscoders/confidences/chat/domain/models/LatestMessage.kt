@@ -6,5 +6,5 @@ data class LatestMessage(
     val receiverId: String,
     val image: String?,
     val room: String,
-    val timestamp: Long
+    val timestamp: String
 )

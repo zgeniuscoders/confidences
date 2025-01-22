@@ -153,7 +153,6 @@ fun ChatListBody(
                     modifier = Modifier
                         .padding(innerPadding)
                         .fillMaxSize(),
-                    verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
                     items(state.messages) { message ->
 
@@ -206,7 +205,7 @@ fun ChatListBody(
                                         style = MaterialTheme.typography.titleMedium
                                     )
                                     Text(
-                                        text = "20:00",
+                                        text = message.timestamp,
                                         style = MaterialTheme.typography.bodyMedium,
                                         fontWeight = FontWeight.Medium,
                                         color = MaterialTheme.colorScheme.primary
@@ -256,6 +255,6 @@ internal val lastMessage = LatestMessage(
     message = "Petit nanga oza bien ? po nga naza nanga bien osalani ",
     receiverId = "1",
     image = null,
-    timestamp = 1003000,
+    timestamp = "12/12/2025",
     room = "1"
 )
