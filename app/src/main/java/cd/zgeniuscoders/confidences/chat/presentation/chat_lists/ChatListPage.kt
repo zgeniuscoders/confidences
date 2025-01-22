@@ -4,6 +4,7 @@ import android.Manifest
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,11 +14,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AddComment
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -28,11 +32,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -75,6 +81,9 @@ fun ChatListBody(
     navHostController: NavHostController,
     state: ChatListState, onEvent: (event: ChatListEvent) -> Unit
 ) {
+
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+
     val contactLauncher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission(),
             onResult = { isGranted ->
@@ -86,6 +95,7 @@ fun ChatListBody(
     Scaffold(
         topBar = {
             TopAppBar(
+                scrollBehavior = scrollBehavior,
                 title = { Text(text = "Confidences") },
                 actions = {
                     IconButton(onClick = { /*TODO*/ }) {
@@ -117,7 +127,9 @@ fun ChatListBody(
 
             }
         },
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            .nestedScroll(scrollBehavior.nestedScrollConnection)
     ) { innerPadding ->
 
         when {
@@ -127,7 +139,7 @@ fun ChatListBody(
                 }
             }
 
-            state.messages.isEmpty() -> {
+            state.filterMessages.isEmpty() -> {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -154,7 +166,34 @@ fun ChatListBody(
                         .padding(innerPadding)
                         .fillMaxSize(),
                 ) {
-                    items(state.messages) { message ->
+                    item {
+                        LazyRow(
+                            modifier = Modifier.padding(start = 15.dp),
+                            horizontalArrangement = Arrangement.spacedBy(10.dp)
+                        ) {
+                            items(state.categories) { category ->
+                                Card(
+                                    modifier = Modifier.clickable {
+                                        onEvent(ChatListEvent.OnSelectedCategoryChange(category))
+                                    }, colors = CardDefaults.cardColors(
+                                        containerColor = if (state.selectedCategory == category)
+                                            MaterialTheme.colorScheme.primary
+                                        else
+                                            MaterialTheme.colorScheme.surfaceContainerHigh
+                                    )
+                                ) {
+                                    Text(
+                                        text = category,
+                                        modifier = Modifier.padding(
+                                            vertical = 5.dp,
+                                            horizontal = 10.dp
+                                        )
+                                    )
+                                }
+                            }
+                        }
+                    }
+                    items(state.filterMessages) { message ->
 
                         val user = state.users.find { it.userId == message.receiverId }
                         var phoneNumber = user?.phoneNumber
@@ -241,7 +280,8 @@ fun ChatListPreview(modifier: Modifier = Modifier) {
         ChatListBody(
             rememberNavController(),
             state = ChatListState(
-                messages = (1..10).map { lastMessage }
+                isLoading = false,
+                filterMessages = (1..10).map { lastMessage }
             )
         ) {
 

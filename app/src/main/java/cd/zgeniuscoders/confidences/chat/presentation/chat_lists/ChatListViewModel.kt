@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import cd.zgeniuscoders.confidences.chat.data.mappers.toContactList
 import cd.zgeniuscoders.confidences.chat.data.mappers.toLatsMessageList
 import cd.zgeniuscoders.confidences.chat.data.services.ContactService
-import cd.zgeniuscoders.confidences.chat.domain.models.Contact
 import cd.zgeniuscoders.confidences.chat.domain.models.LatestMessage
 import cd.zgeniuscoders.confidences.chat.domain.repository.LatestMessageRepository
 import cd.zgeniuscoders.confidences.core.domain.utils.Result
@@ -55,7 +54,38 @@ class ChatListViewModel(
 
 
     fun onTriggerEvent(event: ChatListEvent){
+        when (event) {
+            is ChatListEvent.OnSelectedCategoryChange -> filterUserChat(event.category)
+        }
+    }
 
+    private fun filterUserChat(category: String) {
+        viewModelScope.launch {
+
+            _state.update {
+                it.copy(
+                    selectedCategory = category
+                )
+            }
+
+            val filterMessages = when (category) {
+                "Anonyme" -> {
+                    state.value.messages.filter { it.room != state.value.currentUser!!.userId }
+                }
+
+                "Mes Contacts" -> {
+                    state.value.messages.filter { it.room == state.value.currentUser!!.userId }
+                }
+
+                else -> {
+                    state.value.messages
+                }
+            }
+
+            _state.update {
+                it.copy(filterMessages = filterMessages)
+            }
+        }
     }
 
     private fun getMessages(){
@@ -115,6 +145,7 @@ class ChatListViewModel(
                                 it.copy(
                                     isLoading = false,
                                     messages = latestMessages,
+                                    filterMessages = latestMessages,
                                     users = users
                                 )
                             }

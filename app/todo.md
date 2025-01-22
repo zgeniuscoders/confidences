@@ -4,7 +4,7 @@
 [] modifier un message
 [] marquer un message comme vu
 [] supprimer un message
-[] filtrer les conversations
+[x] filtrer les conversations
 [] envoyer des sticker
 [] integrer un editeur markdown
 [] desactiver le compte d'un utilisateur
