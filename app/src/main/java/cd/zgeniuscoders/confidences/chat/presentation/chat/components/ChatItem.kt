@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import cd.zgeniuscoders.confidences.chat.domain.models.Message
+import dev.jeziellago.compose.markdowntext.MarkdownText
 
 @Composable
 fun ChatItem(message: Message, currentUserId: String) {
@@ -49,9 +50,7 @@ fun ChatItem(message: Message, currentUserId: String) {
             Column(
                 modifier = Modifier.padding(10.dp),
             ) {
-                Text(
-                    message.message,
-                )
+                MarkdownText(markdown = message.message)
             }
         }
 

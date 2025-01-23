@@ -104,6 +104,8 @@ dependencies {
 
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.kotlinx.coroutines.android)
+
+    implementation("com.github.jeziellago:compose-markdown:0.5.6")
 }
 
 kapt {
