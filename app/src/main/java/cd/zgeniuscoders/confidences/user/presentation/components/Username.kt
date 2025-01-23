@@ -13,8 +13,8 @@ import androidx.compose.ui.unit.dp
 import cd.zgeniuscoders.confidences.R
 import cd.zgeniuscoders.confidences.core.presentation.components.OnboardingCard
 import cd.zgeniuscoders.confidences.core.presentation.components.OutlineTextFieldComponent
-import cd.zgeniuscoders.confidences.user.presentation.OnboardingEvent
-import cd.zgeniuscoders.confidences.user.presentation.OnboardingState
+import cd.zgeniuscoders.confidences.user.presentation.onboarding.OnboardingEvent
+import cd.zgeniuscoders.confidences.user.presentation.onboarding.OnboardingState
 import cd.zgeniuscoders.confidences.ui.theme.ConfidencesTheme
 
 @Composable

@@ -8,9 +8,11 @@ fun NavBackStackEntry?.fromRoute(): Routes {
         ?.substringAfterLast(".")?.let {
             when (it) {
                 Routes.ChatList::class.simpleName -> return Routes.ChatList
-                Routes.Chat::class.simpleName -> return Routes.Chat("")
+                Routes.Chat::class.simpleName -> return Routes.Chat("", "")
                 Routes.Authentication::class.simpleName -> return Routes.Authentication
+                Routes.OnBoarding::class.simpleName -> return Routes.OnBoarding
                 Routes.UserProfile::class.simpleName -> return Routes.UserProfile("")
+                Routes.ContactList::class.simpleName -> return Routes.ContactList
                 else -> return Routes.ChatList
             }
         }

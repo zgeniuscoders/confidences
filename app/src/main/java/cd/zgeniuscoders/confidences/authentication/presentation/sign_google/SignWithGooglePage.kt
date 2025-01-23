@@ -48,10 +48,16 @@ fun SignWithGooglePage(
         }
     }
 
-    LaunchedEffect(state.isLogged) {
-        if (state.isLogged) {
-            navController.navigate(Routes.OnBoarding)
+    LaunchedEffect(key1 = state.canPass) {
+
+        if(state.canPass){
+            if (state.isLogged && state.hasAccount) {
+                navController.navigate(Routes.MainNavGraph)
+            } else {
+                navController.navigate(Routes.OnBoarding)
+            }
         }
+
     }
 
     SignWithGoogleBody(
@@ -65,7 +71,8 @@ fun SignWithGooglePage(
 fun SignWithGoogleBody(state: SignWithGoogleState, onEvent: (event: SignWithGoogleEvent) -> Unit) {
 
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
             .padding(20.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(10.dp)

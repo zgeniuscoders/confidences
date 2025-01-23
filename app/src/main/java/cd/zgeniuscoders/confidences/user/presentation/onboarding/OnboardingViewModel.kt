@@ -1,4 +1,4 @@
-package cd.zgeniuscoders.confidences.user.presentation
+package cd.zgeniuscoders.confidences.user.presentation.onboarding
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -6,6 +6,9 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cd.zgeniuscoders.confidences.authentication.domain.models.UserRequest
+import cd.zgeniuscoders.confidences.core.domain.models.Session
+import cd.zgeniuscoders.confidences.core.domain.services.SessionService
+import cd.zgeniuscoders.confidences.core.domain.utils.Constant
 import cd.zgeniuscoders.confidences.core.domain.utils.Result
 import cd.zgeniuscoders.confidences.user.domain.repository.UserRepository
 import com.google.firebase.auth.FirebaseAuth
@@ -15,7 +18,8 @@ import kotlinx.coroutines.launch
 
 class OnboardingViewModel(
     private val userRepository: UserRepository,
-    private val currentUser: FirebaseAuth
+    private val currentUser: FirebaseAuth,
+    private val sessionService: SessionService
 ) : ViewModel() {
 
     var state by mutableStateOf(OnboardingState())
@@ -28,6 +32,9 @@ class OnboardingViewModel(
             is OnboardingEvent.OnUsernameChanged -> state = state.copy(username = event.value)
             is OnboardingEvent.OnPhoneNumberChanged -> state = state.copy(phoneNumber = event.value)
             OnboardingEvent.OnPreviousButtonClicked -> onPreviousButton()
+            is OnboardingEvent.OnCountryCodeChanged -> state = state.copy(
+                selectedCountryState = event.value
+            )
         }
     }
 
@@ -42,11 +49,13 @@ class OnboardingViewModel(
             val isValidated = validated()
             if (isValidated) {
                 val user = currentUser.currentUser
+                val phoneNumber =
+                    "${state.selectedCountryState?.countryPhoneNumberCode}${state.phoneNumber}"
 
                 userRepository
                     .addUser(
                         UserRequest(
-                            state.phoneNumber,
+                            phoneNumber,
                             user!!.uid,
                             state.username,
                             user.email!!
@@ -59,6 +68,13 @@ class OnboardingViewModel(
                             }
 
                             is Result.Success -> {
+
+                                sessionService
+                                    .add(
+                                        Session(isAuthenticated = true),
+                                        Constant.IS_AUTHENTICATED
+                                    )
+
                                 state.copy(isLoading = false, hasAccount = true)
                             }
                         }

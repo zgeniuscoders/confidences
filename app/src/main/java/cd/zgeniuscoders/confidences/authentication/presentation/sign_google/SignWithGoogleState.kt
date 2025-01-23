@@ -1,7 +1,8 @@
 package cd.zgeniuscoders.confidences.authentication.presentation.sign_google
 
 data class SignWithGoogleState(
-    var isLogin: Boolean = false,
+    var canPass: Boolean = false,
     val isLogged: Boolean = false,
+    val hasAccount: Boolean = false,
     var message: String = ""
 )
