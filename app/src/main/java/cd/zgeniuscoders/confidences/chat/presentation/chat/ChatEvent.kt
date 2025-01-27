@@ -6,4 +6,8 @@ sealed interface ChatEvent {
 
     data object OnSendMessageButtonClick : ChatEvent
 
+    data class OnDeleteMessageForMe(val messageId: String): ChatEvent
+
+    data class OnDeleteMessageForEveryOne(val messageId: String): ChatEvent
+
 }

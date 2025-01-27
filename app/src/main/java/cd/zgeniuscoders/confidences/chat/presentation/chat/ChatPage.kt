@@ -116,7 +116,11 @@ fun ChatBody(
                 .fillMaxSize()
         ) {
             items(state.messages) { message ->
-                ChatItem(message = message, currentUserId = state.currentUserId)
+                ChatItem(
+                    message = message,
+                    currentUserId = state.currentUserId,
+                    onEvent
+                )
             }
         }
 

@@ -1,6 +1,5 @@
 package cd.zgeniuscoders.confidences.chat.presentation.chat
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -56,7 +55,46 @@ class ChatViewModel(
         when (event) {
             is ChatEvent.OnMessageFieldChange -> _state.update { it.copy(message = event.message) }
             ChatEvent.OnSendMessageButtonClick -> sendMessage()
+            is ChatEvent.OnDeleteMessageForMe -> deleteMessageForMe(event.messageId)
+            is ChatEvent.OnDeleteMessageForEveryOne -> deleteMessageForEveryOne(event.messageId)
         }
+    }
+
+    private fun deleteMessage(messageId: String, room: String) {
+
+        viewModelScope.launch {
+
+            _state.update {
+                it.copy(error = "")
+            }
+
+            val res = messageRepository
+                .deleteMessage(
+                    room,
+                    messageId
+                )
+
+            when (res) {
+                is Result.Error -> {
+                    _state.update {
+                        it.copy(error = res.message.toString())
+                    }
+                }
+
+                is Result.Success -> {
+
+                }
+            }
+        }
+    }
+
+    private fun deleteMessageForEveryOne(messageId: String) {
+        deleteMessage(messageId, state.value.senderRoom)
+        deleteMessage(messageId, state.value.receiverRoom)
+    }
+
+    private fun deleteMessageForMe(messageId: String) {
+        deleteMessage(messageId, state.value.senderRoom)
     }
 
     private fun getCurrentUser() {
@@ -105,10 +143,6 @@ class ChatViewModel(
             _state.update {
                 it.copy(isLoading = true)
             }
-
-            Log.i("ROOM", "sender room : $${state.value.senderRoom}")
-            Log.i("ROOM", "receiver room : $${state.value.receiverRoom}")
-            Log.i("ROOM", "receiver : $${receiverId}")
 
             messageRepository
                 .getMessages(state.value.senderRoom)
