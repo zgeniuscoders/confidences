@@ -96,7 +96,7 @@ fun ChatItem(message: Message, currentUserId: String, onEvent: (event: ChatEvent
                         OutlinedButton(
                             onClick = {
                                 onEvent(
-                                    ChatEvent.OnDeleteMessageForMe(
+                                    ChatEvent.OnDeleteMessageForEveryOne(
                                         message.id
                                     )
                                 )

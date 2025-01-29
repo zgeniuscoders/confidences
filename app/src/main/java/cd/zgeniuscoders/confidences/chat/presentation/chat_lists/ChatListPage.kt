@@ -165,6 +165,7 @@ fun ChatListBody(
                     modifier = Modifier
                         .padding(innerPadding)
                         .fillMaxSize(),
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
                     item {
                         LazyRow(
@@ -226,7 +227,8 @@ fun ChatListBody(
                             navHostController = navHostController,
                             hasAccount = true,
                             userId = message.receiverId,
-                            phoneNumber = phoneNumber
+                            phoneNumber = phoneNumber,
+                            isFirst = message.room == state.currentUser?.userId
                         ) {
 
                             AvatarCard(

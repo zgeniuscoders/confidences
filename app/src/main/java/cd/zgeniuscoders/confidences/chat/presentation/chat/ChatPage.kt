@@ -15,6 +15,7 @@ import androidx.compose.material.icons.rounded.Send
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -115,6 +116,7 @@ fun ChatBody(
                 .padding(innerP)
                 .fillMaxSize()
         ) {
+
             items(state.messages) { message ->
                 ChatItem(
                     message = message,

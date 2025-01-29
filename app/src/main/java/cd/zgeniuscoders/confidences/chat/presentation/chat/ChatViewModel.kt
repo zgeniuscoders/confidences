@@ -23,6 +23,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.Date
+import java.util.UUID
 
 class ChatViewModel(
     private val messageRepository: MessageRepository,
@@ -60,9 +61,7 @@ class ChatViewModel(
         }
     }
 
-    private fun deleteMessage(messageId: String, room: String) {
-
-        viewModelScope.launch {
+    private suspend fun deleteMessage(messageId: String, room: String) {
 
             _state.update {
                 it.copy(error = "")
@@ -85,16 +84,20 @@ class ChatViewModel(
 
                 }
             }
-        }
+
     }
 
     private fun deleteMessageForEveryOne(messageId: String) {
-        deleteMessage(messageId, state.value.senderRoom)
-        deleteMessage(messageId, state.value.receiverRoom)
+        viewModelScope.launch {
+            deleteMessage(messageId, state.value.receiverRoom)
+            deleteMessage(messageId, state.value.senderRoom)
+        }
     }
 
     private fun deleteMessageForMe(messageId: String) {
-        deleteMessage(messageId, state.value.senderRoom)
+        viewModelScope.launch {
+            deleteMessage(messageId, state.value.senderRoom)
+        }
     }
 
     private fun getCurrentUser() {
@@ -195,8 +198,12 @@ class ChatViewModel(
         }
     }
 
-    private fun saveLatestMessage() {
-        viewModelScope.launch {
+    private fun saveLatestMessage(uuid: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+
+            _state.update {
+                it.copy(error = "")
+            }
 
             val room = if(isSenderSentMessageFirst) {
                 state.value.currentUserId
@@ -204,15 +211,17 @@ class ChatViewModel(
                 receiverId
             }
 
-            val senderLastMsg = LatestMessageRequest(
-                receiverId = receiverId,
+            val receiverLastMsg = LatestMessageRequest(
+                id = uuid,
+                receiverId = currentUser!!,
                 message = state.value.message,
                 sendAt = time,
                 room = room
             )
 
-            val receiverLastMsg = LatestMessageRequest(
-                receiverId = currentUser!!,
+            val senderLastMsg = LatestMessageRequest(
+                id = uuid,
+                receiverId = receiverId,
                 message = state.value.message,
                 sendAt = time,
                 room = room
@@ -223,13 +232,21 @@ class ChatViewModel(
 
             latestMessageRepository
                 .saveLatestMessage(currentUser, state.value.senderRoom, senderLastMsg)
+
         }
     }
 
     private fun sendMessage() {
         viewModelScope.launch(Dispatchers.IO) {
 
+            val uuid = UUID.randomUUID().toString()
+
+            _state.update {
+                it.copy(error = "")
+            }
+
             val message = MessageRequest(
+                id = uuid,
                 senderId = currentUser!!,
                 message = state.value.message,
                 sendAt = time
@@ -241,11 +258,12 @@ class ChatViewModel(
             messageRepository
                 .sendMessage(state.value.receiverRoom, message)
 
-            saveLatestMessage()
+            saveLatestMessage(uuid)
 
             _state.update {
                 it.copy(message = "")
             }
+
         }
     }
 

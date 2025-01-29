@@ -5,6 +5,7 @@
 [] marquer un message comme vu
 [x] supprimer un message pour toi 
 [] afficher l'avant dernier message lorsque on efface le dernier msg
+[] afficher le dernier msg dans la chat 
 [x] filtrer les conversations
 [] envoyer des sticker
 [] integrer un editeur markdown
