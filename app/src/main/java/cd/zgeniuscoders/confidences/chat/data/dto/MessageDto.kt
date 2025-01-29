@@ -16,12 +16,19 @@ data class MessagesDto(
 data class MessageDtoData(
     @SerialName("id")
     val id: String = "",
+
     @SerialName("sender_id")
     val senderId: String = "",
+
     @SerialName("message")
     val message: String = "",
-    @SerialName("timestap")
+
+    @SerialName("image")
     val image: String? = null,
+
     @SerialName("timestamp")
     val sendAt: Long = 0,
+
+    @SerialName("read")
+    val read: Boolean = false,
 )

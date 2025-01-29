@@ -298,5 +298,6 @@ internal val lastMessage = LatestMessage(
     receiverId = "1",
     image = null,
     timestamp = "12/12/2025",
-    room = "1"
+    room = "1",
+    isRead = true
 )

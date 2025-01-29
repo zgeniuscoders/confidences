@@ -1,6 +1,8 @@
 package cd.zgeniuscoders.confidences.ui.theme
 import androidx.compose.ui.graphics.Color
 
+val primaryColorBlue = Color(0xFF2196F3)
+
 val primaryLight = Color(0xFF2E6A44)
 val onPrimaryLight = Color(0xFFFFFFFF)
 val primaryContainerLight = Color(0xFFB1F1C1)

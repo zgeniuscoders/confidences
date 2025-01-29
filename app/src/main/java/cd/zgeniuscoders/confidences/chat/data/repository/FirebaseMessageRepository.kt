@@ -113,7 +113,11 @@ class FirebaseMessageRepository(
         room: String, request: MessageRequest
     ): Result<Boolean> {
         return try {
-            getRoom(room).document(request.id).set(request).await()
+
+            getRoom(room)
+                .document(request.id)
+                .set(request)
+                .await()
 
 
             Result.Success(true)

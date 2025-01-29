@@ -1,10 +1,12 @@
 package cd.zgeniuscoders.confidences.chat.presentation.chat
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import cd.zgeniuscoders.confidences.chat.data.mappers.toMessageList
+import cd.zgeniuscoders.confidences.chat.data.mappers.toMessageRequest
 import cd.zgeniuscoders.confidences.chat.domain.models.LatestMessageRequest
 import cd.zgeniuscoders.confidences.chat.domain.models.MessageRequest
 import cd.zgeniuscoders.confidences.chat.domain.repository.LatestMessageRepository
@@ -159,9 +161,13 @@ class ChatViewModel(
                         }
 
                         is Result.Success -> {
+
                             _state.update {
                                 it.copy(messages = res.data!!.toMessageList(), isLoading = false)
                             }
+
+                            markAsRead()
+
                         }
                     }
 
@@ -216,7 +222,8 @@ class ChatViewModel(
                 receiverId = currentUser!!,
                 message = state.value.message,
                 sendAt = time,
-                room = room
+                room = room,
+                isRead = false
             )
 
             val senderLastMsg = LatestMessageRequest(
@@ -224,14 +231,15 @@ class ChatViewModel(
                 receiverId = receiverId,
                 message = state.value.message,
                 sendAt = time,
-                room = room
+                room = room,
+                isRead = true
             )
 
             latestMessageRepository
-                .saveLatestMessage(receiverId, state.value.receiverRoom, receiverLastMsg)
+                .upsertLatestMessage(receiverId, state.value.receiverRoom, receiverLastMsg)
 
             latestMessageRepository
-                .saveLatestMessage(currentUser, state.value.senderRoom, senderLastMsg)
+                .upsertLatestMessage(currentUser, state.value.senderRoom, senderLastMsg)
 
         }
     }
@@ -245,18 +253,27 @@ class ChatViewModel(
                 it.copy(error = "")
             }
 
-            val message = MessageRequest(
+            val receiverMessageObj = MessageRequest(
                 id = uuid,
                 senderId = currentUser!!,
                 message = state.value.message,
-                sendAt = time
+                sendAt = time,
+                read = false
+            )
+
+            val senderMessageObj = MessageRequest(
+                id = uuid,
+                senderId = currentUser!!,
+                message = state.value.message,
+                sendAt = time,
+                read = false
             )
 
             messageRepository
-                .sendMessage(state.value.senderRoom, message)
+                .sendMessage(state.value.senderRoom, senderMessageObj)
 
             messageRepository
-                .sendMessage(state.value.receiverRoom, message)
+                .sendMessage(state.value.receiverRoom, receiverMessageObj)
 
             saveLatestMessage(uuid)
 
@@ -265,6 +282,37 @@ class ChatViewModel(
             }
 
         }
+    }
+
+    private fun markAsRead() {
+        viewModelScope.launch {
+
+            if (isMessageOwner()) {
+
+                val lastMessage = state.value.messages.last()
+                lastMessage.isRead = true
+
+                messageRepository
+                    .updateMessage(
+                        state.value.senderRoom,
+                        lastMessage.toMessageRequest()
+                    )
+
+                messageRepository
+                    .updateMessage(
+                        state.value.receiverRoom,
+                        lastMessage.toMessageRequest()
+                    )
+
+
+            }
+
+        }
+    }
+
+    private fun isMessageOwner(): Boolean {
+        val message = state.value.messages.last()
+        return message.senderId != state.value.currentUserId
     }
 
 }

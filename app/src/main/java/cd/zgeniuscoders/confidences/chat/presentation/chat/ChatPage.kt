@@ -10,12 +10,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.EmojiEmotions
 import androidx.compose.material.icons.rounded.Send
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -67,14 +65,6 @@ fun ChatBody(
                     modifier = Modifier
                         .weight(0.8f)
                         .heightIn(min = 50.dp, max = 120.dp),
-                    leadingIcon = {
-                        IconButton(onClick = { /*TODO*/ }) {
-                            Icon(
-                                imageVector = Icons.Rounded.EmojiEmotions,
-                                contentDescription = "emoji_icon"
-                            )
-                        }
-                    },
                     trailingIcon = {
                         IconButton(
                             onClick = { onEvent(ChatEvent.OnSendMessageButtonClick) },
@@ -82,7 +72,7 @@ fun ChatBody(
                         ) {
                             Icon(
                                 imageVector = Icons.Rounded.Send,
-                                contentDescription = "emoji_icon"
+                                contentDescription = "send icon"
                             )
                         }
                     },
@@ -152,8 +142,10 @@ fun ChatPagePreview(modifier: Modifier = Modifier) {
 
 internal val message = Message(
     "1",
-    message = "Petit nanga",
+    message = "Petit nanga hfkfffhkkhfkfkfkfkfkfkfkfhkfkfkhfkfkffkjfkfkfkfkfkfjfkfjfkfkjfkjfjkfjk",
     senderId = "1",
     image = null,
-    timestamp = "12/02/2025"
+    timestamp = 121133131333,
+    timeAgo = "12/12/1940",
+    isRead = true
 )
