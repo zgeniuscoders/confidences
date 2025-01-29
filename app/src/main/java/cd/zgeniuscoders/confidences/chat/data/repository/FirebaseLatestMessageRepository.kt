@@ -58,7 +58,7 @@ class FirebaseLatestMessageRepository(
             awaitClose()
         }
 
-    override suspend fun saveLatestMessage(
+    override suspend fun upsertLatestMessage(
         userId: String,
         room: String,
         request: LatestMessageRequest

@@ -22,4 +22,6 @@ data class LatestMessageDtoData(
     val room: String = "",
     @SerialName("timestamp")
     val sendAt: Long = 0,
+    @SerialName("is_read")
+    val isRead: Boolean = false,
 )

@@ -12,7 +12,8 @@ fun LatestMessageDto.toLatsMessageList(): List<LatestMessage> {
             image = it.image,
             timestamp = getTimeAgo(it.sendAt),
             receiverId = it.receiverId,
-            room = it.room
+            room = it.room,
+            isRead = it.isRead
         )
     }
 }

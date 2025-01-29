@@ -9,7 +9,7 @@ interface LatestMessageRepository {
 
     suspend fun getLatestMessage(userId: String): Flow<Result<LatestMessageDto>>
 
-    suspend fun saveLatestMessage(
+    suspend fun upsertLatestMessage(
         userId: String,
         room: String,
         request: LatestMessageRequest

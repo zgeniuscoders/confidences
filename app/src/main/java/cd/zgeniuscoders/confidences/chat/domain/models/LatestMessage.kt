@@ -6,5 +6,6 @@ data class LatestMessage(
     val receiverId: String,
     val image: String?,
     val room: String,
-    val timestamp: String
+    val timestamp: String,
+    val isRead: Boolean
 )

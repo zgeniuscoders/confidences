@@ -64,8 +64,6 @@ class FirebaseMessageRepository(
 
     override suspend fun sendMessage(room: String, request: MessageRequest): Result<Boolean> {
         return try {
-            val docId = collection.document().id
-            request.id = docId
 
             getRoom(room)
                 .document(request.id)
@@ -115,7 +113,11 @@ class FirebaseMessageRepository(
         room: String, request: MessageRequest
     ): Result<Boolean> {
         return try {
-            getRoom(room).document(request.id).set(request).await()
+
+            getRoom(room)
+                .document(request.id)
+                .set(request)
+                .await()
 
 
             Result.Success(true)

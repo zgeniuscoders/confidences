@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import cd.zgeniuscoders.confidences.chat.data.mappers.toMessageList
+import cd.zgeniuscoders.confidences.chat.data.mappers.toMessageRequest
 import cd.zgeniuscoders.confidences.chat.domain.models.LatestMessageRequest
 import cd.zgeniuscoders.confidences.chat.domain.models.MessageRequest
 import cd.zgeniuscoders.confidences.chat.domain.repository.LatestMessageRepository
@@ -24,6 +25,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.Date
+import java.util.UUID
 
 class ChatViewModel(
     private val messageRepository: MessageRepository,
@@ -56,6 +58,47 @@ class ChatViewModel(
         when (event) {
             is ChatEvent.OnMessageFieldChange -> _state.update { it.copy(message = event.message) }
             ChatEvent.OnSendMessageButtonClick -> sendMessage()
+            is ChatEvent.OnDeleteMessageForMe -> deleteMessageForMe(event.messageId)
+            is ChatEvent.OnDeleteMessageForEveryOne -> deleteMessageForEveryOne(event.messageId)
+        }
+    }
+
+    private suspend fun deleteMessage(messageId: String, room: String) {
+
+            _state.update {
+                it.copy(error = "")
+            }
+
+            val res = messageRepository
+                .deleteMessage(
+                    room,
+                    messageId
+                )
+
+            when (res) {
+                is Result.Error -> {
+                    _state.update {
+                        it.copy(error = res.message.toString())
+                    }
+                }
+
+                is Result.Success -> {
+
+                }
+            }
+
+    }
+
+    private fun deleteMessageForEveryOne(messageId: String) {
+        viewModelScope.launch {
+            deleteMessage(messageId, state.value.receiverRoom)
+            deleteMessage(messageId, state.value.senderRoom)
+        }
+    }
+
+    private fun deleteMessageForMe(messageId: String) {
+        viewModelScope.launch {
+            deleteMessage(messageId, state.value.senderRoom)
         }
     }
 
@@ -106,10 +149,6 @@ class ChatViewModel(
                 it.copy(isLoading = true)
             }
 
-            Log.i("ROOM", "sender room : $${state.value.senderRoom}")
-            Log.i("ROOM", "receiver room : $${state.value.receiverRoom}")
-            Log.i("ROOM", "receiver : $${receiverId}")
-
             messageRepository
                 .getMessages(state.value.senderRoom)
                 .onEach { res ->
@@ -122,9 +161,13 @@ class ChatViewModel(
                         }
 
                         is Result.Success -> {
+
                             _state.update {
                                 it.copy(messages = res.data!!.toMessageList(), isLoading = false)
                             }
+
+                            markAsRead()
+
                         }
                     }
 
@@ -161,8 +204,12 @@ class ChatViewModel(
         }
     }
 
-    private fun saveLatestMessage() {
-        viewModelScope.launch {
+    private fun saveLatestMessage(uuid: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+
+            _state.update {
+                it.copy(error = "")
+            }
 
             val room = if(isSenderSentMessageFirst) {
                 state.value.currentUserId
@@ -170,49 +217,102 @@ class ChatViewModel(
                 receiverId
             }
 
-            val senderLastMsg = LatestMessageRequest(
-                receiverId = receiverId,
-                message = state.value.message,
-                sendAt = time,
-                room = room
-            )
-
             val receiverLastMsg = LatestMessageRequest(
+                id = uuid,
                 receiverId = currentUser!!,
                 message = state.value.message,
                 sendAt = time,
-                room = room
+                room = room,
+                isRead = false
+            )
+
+            val senderLastMsg = LatestMessageRequest(
+                id = uuid,
+                receiverId = receiverId,
+                message = state.value.message,
+                sendAt = time,
+                room = room,
+                isRead = true
             )
 
             latestMessageRepository
-                .saveLatestMessage(receiverId, state.value.receiverRoom, receiverLastMsg)
+                .upsertLatestMessage(receiverId, state.value.receiverRoom, receiverLastMsg)
 
             latestMessageRepository
-                .saveLatestMessage(currentUser, state.value.senderRoom, senderLastMsg)
+                .upsertLatestMessage(currentUser, state.value.senderRoom, senderLastMsg)
+
         }
     }
 
     private fun sendMessage() {
         viewModelScope.launch(Dispatchers.IO) {
 
-            val message = MessageRequest(
+            val uuid = UUID.randomUUID().toString()
+
+            _state.update {
+                it.copy(error = "")
+            }
+
+            val receiverMessageObj = MessageRequest(
+                id = uuid,
                 senderId = currentUser!!,
                 message = state.value.message,
-                sendAt = time
+                sendAt = time,
+                read = false
+            )
+
+            val senderMessageObj = MessageRequest(
+                id = uuid,
+                senderId = currentUser!!,
+                message = state.value.message,
+                sendAt = time,
+                read = false
             )
 
             messageRepository
-                .sendMessage(state.value.senderRoom, message)
+                .sendMessage(state.value.senderRoom, senderMessageObj)
 
             messageRepository
-                .sendMessage(state.value.receiverRoom, message)
+                .sendMessage(state.value.receiverRoom, receiverMessageObj)
 
-            saveLatestMessage()
+            saveLatestMessage(uuid)
 
             _state.update {
                 it.copy(message = "")
             }
+
         }
+    }
+
+    private fun markAsRead() {
+        viewModelScope.launch {
+
+            if (isMessageOwner()) {
+
+                val lastMessage = state.value.messages.last()
+                lastMessage.isRead = true
+
+                messageRepository
+                    .updateMessage(
+                        state.value.senderRoom,
+                        lastMessage.toMessageRequest()
+                    )
+
+                messageRepository
+                    .updateMessage(
+                        state.value.receiverRoom,
+                        lastMessage.toMessageRequest()
+                    )
+
+
+            }
+
+        }
+    }
+
+    private fun isMessageOwner(): Boolean {
+        val message = state.value.messages.last()
+        return message.senderId != state.value.currentUserId
     }
 
 }
