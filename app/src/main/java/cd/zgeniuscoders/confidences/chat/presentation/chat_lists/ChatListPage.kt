@@ -205,13 +205,13 @@ fun ChatListBody(
 
                             val currentUser = state.currentUser
 
-                            phoneNumber = if (message.isChatOwner(user.userId)) {
+                            phoneNumber = if (message.room == user.userId) {
                                 currentUser.phoneNumber
                             } else {
                                 user.phoneNumber
                             }
 
-                            username = if (message.isChatOwner(currentUser.userId)) {
+                            username = if (message.room === currentUser.userId) {
 
                                 val contactUser =
                                     state.contacts.find { it.numberPhone == user.phoneNumber }

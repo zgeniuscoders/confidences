@@ -38,7 +38,11 @@ fun UserItemCard(
                         phoneNumber!!,
                         isFirst
                     )
-                )
+                ){
+                    popUpTo(Routes.ContactList){
+                        inclusive = true
+                    }
+                }
 
             }
     ) {

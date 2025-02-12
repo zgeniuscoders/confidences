@@ -286,8 +286,15 @@ class ChatViewModel(
     }
 
     private fun isMessageOwner(): Boolean {
-        val message = state.value.messages.last()
-        return message.senderId != state.value.currentUserId
+
+        val messages = state.value.messages
+
+        if(messages.isNotEmpty()){
+            val message = messages.last()
+            return message.senderId != state.value.currentUserId
+        }
+
+        return false;
     }
 
 }

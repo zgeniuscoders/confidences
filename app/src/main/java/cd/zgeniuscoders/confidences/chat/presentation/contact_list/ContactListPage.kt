@@ -64,7 +64,9 @@ fun ContactListPageBody(
         topBar = {
             TopAppBar(
                 navigationIcon = {
-                    IconButton(onClick = { navHostController.popBackStack() }) {
+                    IconButton(onClick = {
+                        navHostController.popBackStack()
+                    }) {
                         Icon(
                             imageVector = Icons.Rounded.ArrowBackIosNew,
                             contentDescription = "button retour"
@@ -88,7 +90,7 @@ fun ContactListPageBody(
                     hasAccount = user != null,
                     userId = user?.userId,
                     phoneNumber = user?.phoneNumber,
-                    username = user?.username,
+                    username = contact.name,
                     isFirst = true
                 )
                 {
