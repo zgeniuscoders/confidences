@@ -48,6 +48,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import cd.zgeniuscoders.confidences.R
+import cd.zgeniuscoders.confidences.chat.data.isChatOwner
 import cd.zgeniuscoders.confidences.chat.domain.models.LatestMessage
 import cd.zgeniuscoders.confidences.chat.presentation.components.AvatarCard
 import cd.zgeniuscoders.confidences.chat.presentation.components.UserItemCard
@@ -139,7 +140,7 @@ fun ChatListBody(
                 }
             }
 
-            state.filterMessages.isEmpty() -> {
+            state.messages.isEmpty() -> {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -204,13 +205,13 @@ fun ChatListBody(
 
                             val currentUser = state.currentUser
 
-                            phoneNumber = if (message.room == user.userId) {
+                            phoneNumber = if (message.isChatOwner(user.userId)) {
                                 currentUser.phoneNumber
                             } else {
                                 user.phoneNumber
                             }
 
-                            username = if (message.room == currentUser.userId) {
+                            username = if (message.isChatOwner(currentUser.userId)) {
 
                                 val contactUser =
                                     state.contacts.find { it.numberPhone == user.phoneNumber }
@@ -228,6 +229,7 @@ fun ChatListBody(
                             hasAccount = true,
                             userId = message.receiverId,
                             phoneNumber = phoneNumber,
+                            username= username,
                             isFirst = message.room == state.currentUser?.userId
                         ) {
 

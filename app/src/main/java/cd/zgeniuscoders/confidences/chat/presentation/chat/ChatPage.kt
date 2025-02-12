@@ -55,7 +55,7 @@ fun ChatBody(
 ) {
     Scaffold(
         topBar = {
-            ChatTopBar(navHostController = navHostController, state.user)
+            ChatTopBar(navHostController = navHostController, state.receiverUsername)
         }, bottomBar = {
             Row(
                 modifier = Modifier
@@ -129,7 +129,7 @@ fun ChatPagePreview(modifier: Modifier = Modifier) {
             rememberNavController(),
             state = ChatState(
                 currentUserId = "1",
-                user = user,
+                receiverUsername = "zgeniuscoders",
                 messages = (1..5).map {
                     message.copy(senderId = (1..2).random().toString())
                 }

@@ -2,7 +2,8 @@
 [] bloquer un utilisateur
 [] voir la profile d'un utilisateur
 [] modifier un message
-[] marquer un message comme vu
+[x] marquer un message comme vu
+[] marquer le dernier message comme vu
 [x] supprimer un message pour toi 
 [] afficher l'avant dernier message lorsque on efface le dernier msg
 [] afficher le dernier msg dans la chat 

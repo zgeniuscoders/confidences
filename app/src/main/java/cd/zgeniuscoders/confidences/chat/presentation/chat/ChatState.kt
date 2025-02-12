@@ -5,7 +5,7 @@ import cd.zgeniuscoders.confidences.user.domain.models.User
 
 data class ChatState(
     val messages: List<Message> = emptyList(),
-    val user: User? = null,
+    val receiverUsername: String = "",
     val isLoading: Boolean = false,
     val message: String = "",
     val currentUserId: String = "",
