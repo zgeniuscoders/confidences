@@ -41,7 +41,7 @@ class GoogleAuthenticationServiceImpl(
         return GetGoogleIdOption.Builder()
             .setFilterByAuthorizedAccounts(false)
             .setServerClientId(context.getString(R.string.web_client_id))
-            .setAutoSelectEnabled(false)
+            .setAutoSelectEnabled(true)
             .setNonce(createNonce())
             .build()
     }
@@ -75,7 +75,6 @@ class GoogleAuthenticationServiceImpl(
 
                         val googleIdToken = GoogleIdTokenCredential
                             .createFrom(credential.data)
-
 
                         val firebaseCredential = GoogleAuthProvider
                             .getCredential(

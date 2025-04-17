@@ -24,6 +24,12 @@ sealed interface Routes {
     data object ContactList : Routes
 
     @Serializable
+    data object Login : Routes
+
+    @Serializable
+    data object Register : Routes
+
+    @Serializable
     data object Settings : Routes
 
     @Serializable

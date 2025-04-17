@@ -6,6 +6,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import cd.zgeniuscoders.confidences.authentication.presentation.login.LoginPage
+import cd.zgeniuscoders.confidences.authentication.presentation.register.RegisterPage
 import cd.zgeniuscoders.confidences.authentication.presentation.sign_google.SignWithGooglePage
 import cd.zgeniuscoders.confidences.chat.presentation.chat.ChatPage
 import cd.zgeniuscoders.confidences.chat.presentation.chat_lists.ChatListPage
@@ -57,7 +59,7 @@ fun App(
             ChatPage(navHostController = navController)
         }
 
-        navigation<Routes.AuthenticationNavGraph>(startDestination = Routes.Authentication) {
+        navigation<Routes.AuthenticationNavGraph>(startDestination = Routes.Login) {
 
             composable<Routes.OnBoarding> {
                 OnBoardingPage(
@@ -68,6 +70,20 @@ fun App(
 
             composable<Routes.Authentication> {
                 SignWithGooglePage(
+                    navController,
+                    snackbarHostState
+                )
+            }
+
+            composable<Routes.Login> {
+                LoginPage(
+                    navController,
+                    snackbarHostState
+                )
+            }
+
+            composable<Routes.Register> {
+                RegisterPage(
                     navController,
                     snackbarHostState
                 )

@@ -4,6 +4,8 @@ import cd.zgeniuscoders.confidences.authentication.data.services.FirebaseAuthent
 import cd.zgeniuscoders.confidences.authentication.data.services.GoogleAuthenticationServiceImpl
 import cd.zgeniuscoders.confidences.authentication.domain.services.AuthenticationService
 import cd.zgeniuscoders.confidences.authentication.domain.services.GoogleAuthenticationService
+import cd.zgeniuscoders.confidences.authentication.presentation.login.LoginViewModel
+import cd.zgeniuscoders.confidences.authentication.presentation.register.RegisterViewModel
 import cd.zgeniuscoders.confidences.authentication.presentation.sign_google.SignWithGoogleViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModelOf
@@ -20,6 +22,8 @@ val authenticationModule = module {
         FirebaseAuthenticationServiceImpl(get())
     }
 
+    viewModelOf(::LoginViewModel)
+    viewModelOf(::RegisterViewModel)
     viewModelOf(::SignWithGoogleViewModel)
 
 }
