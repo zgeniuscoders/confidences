@@ -1,6 +1,5 @@
 package cd.zgeniuscoders.confidences.authentication.presentation.register
 
-import cd.zgeniuscoders.confidences.authentication.presentation.login.LoginEvent
 
 sealed interface RegisterEvent {
     data class OnEmailChange(val email: String) : RegisterEvent

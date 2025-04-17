@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
@@ -16,14 +17,13 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import cd.zgeniuscoders.confidences.authentication.domain.models.Register
-import cd.zgeniuscoders.confidences.authentication.presentation.login.LoginEvent
-import cd.zgeniuscoders.confidences.authentication.presentation.login.LoginState
-import cd.zgeniuscoders.confidences.authentication.presentation.login.LoginViewModel
 import cd.zgeniuscoders.confidences.core.domain.utils.Routes
 import cd.zgeniuscoders.confidences.ui.theme.ConfidencesTheme
 import org.koin.androidx.compose.koinViewModel
@@ -84,6 +84,9 @@ fun RegisterBody(
             Text("Connexion", fontSize = 24.sp)
             Box(modifier = Modifier.height(10.dp))
             TextField(
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Email
+                ),
                 value = state.email,
                 modifier = Modifier.fillMaxWidth(),
                 label = {
@@ -109,6 +112,7 @@ fun RegisterBody(
                 label = {
                     Text("Mot de passe")
                 },
+                visualTransformation = PasswordVisualTransformation(),
                 onValueChange = {
                     onEvent(RegisterEvent.OnPasswordChange(it))
                 }

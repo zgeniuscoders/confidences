@@ -8,8 +8,6 @@ import androidx.lifecycle.viewModelScope
 import cd.zgeniuscoders.confidences.authentication.domain.models.Login
 import cd.zgeniuscoders.confidences.authentication.domain.models.Register
 import cd.zgeniuscoders.confidences.authentication.domain.services.AuthenticationService
-import cd.zgeniuscoders.confidences.authentication.presentation.login.LoginEvent
-import cd.zgeniuscoders.confidences.authentication.presentation.login.LoginState
 import cd.zgeniuscoders.confidences.core.domain.models.Session
 import cd.zgeniuscoders.confidences.core.domain.services.SessionService
 import cd.zgeniuscoders.confidences.core.domain.utils.Constant

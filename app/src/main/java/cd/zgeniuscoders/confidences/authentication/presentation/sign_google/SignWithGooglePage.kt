@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -28,6 +29,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
@@ -36,7 +40,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import cd.zgeniuscoders.confidences.R
 import cd.zgeniuscoders.confidences.authentication.presentation.components.OrDivider
-import cd.zgeniuscoders.confidences.authentication.presentation.login.LoginEvent
 import cd.zgeniuscoders.confidences.core.domain.utils.Routes
 import cd.zgeniuscoders.confidences.ui.theme.ConfidencesTheme
 import org.koin.androidx.compose.koinViewModel
@@ -103,6 +106,9 @@ fun SignWithGoogleBody(
 
             Column {
                 TextField(
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Email
+                    ),
                     shape = RoundedCornerShape(topEnd = 5.dp, topStart = 5.dp),
                     value = state.email,
                     modifier = Modifier.fillMaxWidth(),
@@ -115,11 +121,13 @@ fun SignWithGoogleBody(
                 )
                 TextField(
                     colors = TextFieldDefaults.colors(
-                        unfocusedIndicatorColor = Color.Transparent
+                        unfocusedIndicatorColor = Color.Transparent,
+                        focusedIndicatorColor = Color.Transparent
                     ),
                     shape = RoundedCornerShape(bottomEnd = 5.dp, bottomStart = 5.dp),
                     value = state.password,
                     modifier = Modifier.fillMaxWidth(),
+                    visualTransformation = PasswordVisualTransformation(),
                     label = {
                         Text("Mot de passe")
                     },
@@ -144,7 +152,7 @@ fun SignWithGoogleBody(
                         navController.navigate(Routes.Register)
                     }
                 ) {
-                    Text("Cree un  compte")
+                    Text("Crée un compte")
                 }
             }
 
