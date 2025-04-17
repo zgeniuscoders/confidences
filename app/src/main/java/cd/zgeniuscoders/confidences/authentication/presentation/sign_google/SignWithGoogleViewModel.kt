@@ -6,6 +6,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cd.zgeniuscoders.confidences.authentication.domain.models.Login
+import cd.zgeniuscoders.confidences.authentication.domain.services.AuthenticationService
 import cd.zgeniuscoders.confidences.authentication.domain.services.GoogleAuthenticationService
 import cd.zgeniuscoders.confidences.core.domain.models.Session
 import cd.zgeniuscoders.confidences.core.domain.services.SessionService
@@ -19,7 +21,8 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 class SignWithGoogleViewModel(
-    private val authenticationService: GoogleAuthenticationService,
+    private val googleAuthService: GoogleAuthenticationService,
+    private val authService: AuthenticationService,
     private val userRepository: UserRepository,
     private val sessionService: SessionService
 ) : ViewModel() {
@@ -32,6 +35,36 @@ class SignWithGoogleViewModel(
             SignWithGoogleEvent.OnGoogleButtonPressed -> {
                 signWithGoogle()
             }
+
+            is SignWithGoogleEvent.OnEmailChange -> state = state.copy(email = event.email)
+            is SignWithGoogleEvent.OnPasswordChange -> state = state.copy(password = event.password)
+            SignWithGoogleEvent.OnSubmit -> onSubmit()
+        }
+    }
+
+    fun onSubmit() {
+        state = state.copy(message = "")
+        viewModelScope.launch {
+            val data = Login(email = state.email, password = state.password)
+            authService.login(data).onEach { res ->
+
+                when (res) {
+                    is Result.Error -> {
+                        state = state.copy(
+                            message = res.message.toString(),
+                            hasAccount = false,
+                            isLogged = false,
+                            canPass = false
+                        )
+                    }
+
+                    is Result.Success -> {
+                        val loggedUser = res.data!!.data
+                        checkIfHasAccount(loggedUser)
+                    }
+                }
+
+            }.launchIn(viewModelScope)
         }
     }
 
@@ -39,7 +72,7 @@ class SignWithGoogleViewModel(
         viewModelScope.launch(Dispatchers.IO) {
 
             state = state.copy(message = "")
-            val response = authenticationService.signWithGoogle()
+            val response = googleAuthService.signWithGoogle()
 
 
             response.onEach {
