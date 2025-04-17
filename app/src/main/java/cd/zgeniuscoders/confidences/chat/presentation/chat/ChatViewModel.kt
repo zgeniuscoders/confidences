@@ -36,6 +36,7 @@ class ChatViewModel(
 ) : ViewModel() {
 
     private val receiverId = savedStateHandle.toRoute<Routes.Chat>().userId
+    private val receiverUsername = savedStateHandle.toRoute<Routes.Chat>().username
     private val receiverPhoneNumber = savedStateHandle.toRoute<Routes.Chat>().phoneNumber
     private val isSenderSentMessageFirst = savedStateHandle.toRoute<Routes.Chat>().isFirst
 
@@ -45,7 +46,9 @@ class ChatViewModel(
     val state = _state
         .onStart {
             getCurrentUser()
-            getUser()
+            _state.update {
+                it.copy(receiverUsername = receiverUsername)
+            }
         }
         .stateIn(
             viewModelScope,
@@ -176,34 +179,6 @@ class ChatViewModel(
         }
     }
 
-    private fun getUser() {
-        viewModelScope.launch(Dispatchers.IO) {
-            userRepository
-                .getUserById(receiverId)
-                .onEach { res ->
-
-                    when (res) {
-                        is Result.Error -> {
-                            _state.update {
-                                it.copy(isLoading = false)
-                            }
-                        }
-
-                        is Result.Success -> {
-                            _state.update {
-                                it.copy(
-                                    isLoading = false,
-                                    user = res.data?.toUserModel()
-                                )
-                            }
-                        }
-                    }
-
-                }
-                .launchIn(viewModelScope)
-        }
-    }
-
     private fun saveLatestMessage(uuid: String) {
         viewModelScope.launch(Dispatchers.IO) {
 
@@ -311,8 +286,15 @@ class ChatViewModel(
     }
 
     private fun isMessageOwner(): Boolean {
-        val message = state.value.messages.last()
-        return message.senderId != state.value.currentUserId
+
+        val messages = state.value.messages
+
+        if(messages.isNotEmpty()){
+            val message = messages.last()
+            return message.senderId != state.value.currentUserId
+        }
+
+        return false;
     }
 
 }

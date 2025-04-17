@@ -21,8 +21,8 @@ fun UserItemCard(
     userId: String?,
     phoneNumber: String?,
     isFirst: Boolean = false,
-    content: @Composable() (RowScope.() -> Unit
-    )
+    username: String?,
+    content: @Composable() (RowScope.() -> Unit),
 ) {
     Column(
         modifier = Modifier
@@ -33,11 +33,16 @@ fun UserItemCard(
 
                 navHostController.navigate(
                     Routes.Chat(
+                        username!!,
                         userId!!,
                         phoneNumber!!,
                         isFirst
                     )
-                )
+                ){
+                    popUpTo(Routes.ContactList){
+                        inclusive = true
+                    }
+                }
 
             }
     ) {

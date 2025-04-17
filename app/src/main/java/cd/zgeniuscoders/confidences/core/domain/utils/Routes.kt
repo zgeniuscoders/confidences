@@ -34,6 +34,7 @@ sealed interface Routes {
 
     @Serializable
     data class Chat(
+        val username: String,
         val userId: String,
         val phoneNumber: String,
         val isFirst: Boolean = false

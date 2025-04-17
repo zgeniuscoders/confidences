@@ -1,6 +1,5 @@
 package cd.zgeniuscoders.confidences.chat.presentation.contact_list
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -13,7 +12,6 @@ import androidx.compose.material.icons.rounded.ArrowBackIosNew
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -21,7 +19,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -67,7 +64,9 @@ fun ContactListPageBody(
         topBar = {
             TopAppBar(
                 navigationIcon = {
-                    IconButton(onClick = { navHostController.popBackStack() }) {
+                    IconButton(onClick = {
+                        navHostController.popBackStack()
+                    }) {
                         Icon(
                             imageVector = Icons.Rounded.ArrowBackIosNew,
                             contentDescription = "button retour"
@@ -91,8 +90,10 @@ fun ContactListPageBody(
                     hasAccount = user != null,
                     userId = user?.userId,
                     phoneNumber = user?.phoneNumber,
+                    username = contact.name,
                     isFirst = true
-                ) {
+                )
+                {
 
                     AvatarCard(initialLetter = contact.name[0])
                     Column {
